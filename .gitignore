@@ -10,5 +10,6 @@ npm-debug.log*
 .vercel
 .agents/
 verification-*.png
+reference-*.png
 supabase/.temp/
 docs/source-materials/

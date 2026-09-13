@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import BrandSymbol from '@/components/BrandSymbol';
 import { seedContents, seedSchedules } from '@/lib/seed-data';
 import { ContentItem, ScheduleItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -34,50 +34,36 @@ export default function HomeContent() {
   const upcoming = schedules.filter((item) => item.status === 'open' && item.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   const featured = columns.find((item) => item.featured) ?? columns[0];
 
-  useEffect(() => {
-    const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.08 });
-    targets.forEach((target) => observer.observe(target));
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
-      <section className="portal-hero cinematic-portal-hero">
-        <div className="container portal-hero-grid">
-          <div className="portal-intro">
-            <span className="eyebrow hero-kicker"><i /> 목회 현장을 위한 AI 연구·교육 기관</span>
-            <h1 className="fluid-display-title"><span className="hero-line">목회의 본질을 지키는</span>{' '}<span className="hero-line accent-line">AI 활용을 연구합니다.</span></h1>
-            <p>목회AI연구소는 교회 현장의 질문에서 출발합니다. 연구 결과를 교육하고, 목회자가 실제로 사용할 수 있는 도구와 자료로 나눕니다.</p>
-            <div className="button-row"><Link href="/columns" className="btn btn-primary">최근 연구 보기</Link><Link href="/apply" className="btn btn-secondary">문의 및 강의 신청</Link></div>
-            <div className="hero-signal-row"><span><b>RESEARCH</b> 현장 연구</span><span><b>EDUCATION</b> 실습 교육</span><span><b>TOOLS</b> 사역 도구</span></div>
+      <section className="reference-hero">
+        <div className="container reference-hero-grid">
+          <div className="reference-hero-copy">
+            <span className="reference-overline">MINISTRY AI RESEARCH INSTITUTE</span>
+            <h1>기술을 앞세우기보다,<br /><em>목회의 본질을 더 깊게.</em></h1>
+            <p>교회 현장에서 시작한 질문을 연구하고, 목회자가 바로 사용할 수 있는 교육과 도구로 연결합니다.</p>
+            <div className="button-row"><Link href="/columns" className="btn btn-primary">연구 결과 보기</Link><Link href="/apply" className="btn btn-secondary">강의·협력 문의</Link></div>
+            <dl className="reference-proof"><div><dt>RESEARCH</dt><dd>현장 중심 연구</dd></div><div><dt>EDUCATION</dt><dd>목회자 실습 교육</dd></div><div><dt>TOOLS</dt><dd>교회 맞춤형 도구</dd></div></dl>
           </div>
-          <div className="brand-hero-visual" role="img" aria-label="목회AI연구소 공식 로고와 백형진 소장">
-            <Image className="official-logo-scene" src="/images/brand/ministry-ai-logo.png" alt="" fill priority sizes="(max-width: 840px) 100vw, 48vw" />
-            <div className="visual-edition"><span>OFFICIAL IDENTITY</span><b>AI × FAITH</b></div>
-            <div className="hero-director-portrait"><Image src="/images/about/director-baekhyungjin.png" alt="" fill priority sizes="(max-width: 600px) 58vw, 310px" /></div>
-            <div className="hero-director-label"><span>DIRECTOR</span><strong>백형진 소장</strong><small>목회 현장에서 연구합니다</small></div>
+          <div className="reference-portrait-stage" aria-label="백형진 목회AI연구소 소장">
+            <span className="reference-stage-line" aria-hidden="true" />
+            <div className="reference-stage-symbol" aria-hidden="true"><BrandSymbol /></div>
+            <div className="reference-director-photo"><Image src="/images/about/director-baekhyungjin.png" alt="백형진 목회AI연구소 소장" fill priority sizes="(max-width: 840px) 90vw, 520px" /></div>
+            <div className="reference-director-info"><span>DIRECTOR · FIELD RESEARCHER</span><strong>백형진 소장</strong><small>안양선민교회 목회 현장에서 연구합니다.</small></div>
           </div>
-        </div>
-        <nav className="container portal-shortcuts animated-shortcuts" aria-label="주요 메뉴 바로가기" data-reveal>
-          {quickLinks.map((item) => <Link href={item.href} className={`portal-shortcut ${item.tone}`} key={item.label}><span aria-hidden="true">●</span><div><strong>{item.label}</strong><small>{item.description}</small></div><b aria-hidden="true">→</b></Link>)}
-        </nav>
-        <div className="container portal-newsline" data-reveal>
-          <div><span>NOW</span><strong>연구소 최근 소식</strong></div>
-          {notices.slice(0, 2).map((item) => <Link href={`/notices/${item.id}`} key={item.id}><b>{item.category}</b><span>{item.title}</span><time>{item.publishedAt.slice(5).replace('-', '.')}</time></Link>)}
-          {!notices.length && <span className="newsline-empty">등록된 공지가 없습니다.</span>}
-          <Link href="/notices" className="newsline-more">전체 보기 ↗</Link>
         </div>
       </section>
 
-      <div className="brand-marquee" aria-hidden="true"><div><span>RESEARCH</span><i>✦</i><span>EDUCATION</span><i>✦</i><span>ETHICS</span><i>✦</i><span>MINISTRY TOOLS</span><i>✦</i><span>FIELD PRACTICE</span><i>✦</i><span>RESEARCH</span><i>✦</i><span>EDUCATION</span><i>✦</i><span>ETHICS</span><i>✦</i></div></div>
+      <nav className="reference-quick-nav" aria-label="주요 메뉴 바로가기"><div className="container">
+        {quickLinks.map((item, index) => <Link href={item.href} key={item.label}><span>0{index + 1}</span><div><strong>{item.label}</strong><small>{item.description}</small></div><b aria-hidden="true">→</b></Link>)}
+      </div></nav>
+
+      <div className="reference-latest"><div className="container">
+        <div><span>NEWS</span><strong>연구소 소식</strong></div>
+        {notices.slice(0, 2).map((item) => <Link href={`/notices/${item.id}`} key={item.id}><b>{item.category}</b><span>{item.title}</span><time>{item.publishedAt.slice(5).replace('-', '.')}</time></Link>)}
+        {!notices.length && <span className="reference-latest-empty">등록된 공지가 없습니다.</span>}
+        <Link href="/notices" className="reference-latest-more">전체 보기 ↗</Link>
+      </div></div>
 
       <section className="portal-section research-newsroom"><div className="container">
         <div className="portal-section-head" data-reveal><div><span className="eyebrow">RESEARCH & COLUMN</span><h2>현장에서 시작한 연구</h2></div><Link href="/columns" className="text-link">모든 칼럼 보기 →</Link></div>

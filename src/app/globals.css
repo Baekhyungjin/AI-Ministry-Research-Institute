@@ -783,3 +783,103 @@ p,li,figcaption { text-wrap: pretty; }
   .portal-section-head h2 { font-size: clamp(30px,9vw,38px); }
   .portal-contact .fluid-display-title { font-size: clamp(31px,9vw,40px); }
 }
+
+/* 2026 editorial homepage refresh: calm, content-first institutional design. */
+.official-brand-mark { width: 44px; height: 44px; flex: 0 0 44px; overflow: visible; border: 0; border-radius: 12px; background: transparent; box-shadow: none; }
+.official-brand-mark svg,.footer-official-logo svg { display: block; width: 100%; height: 100%; }
+.footer-official-logo { overflow: visible; border: 0; border-radius: 14px; background: transparent; }
+
+.reference-hero { overflow: hidden; border-bottom: 1px solid #dde3ea; background: #f6f7f9; }
+.reference-hero-grid { display: grid; min-height: 620px; grid-template-columns: minmax(0,1.02fr) minmax(460px,.98fr); gap: 72px; align-items: stretch; }
+.reference-hero-copy { display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: 82px 0; }
+.reference-overline { color: #245da6; font-size: 11px; font-weight: 850; letter-spacing: .14em; }
+.reference-hero-copy h1 { margin: 22px 0 26px; color: #142237; font-size: clamp(48px,4.9vw,68px); font-weight: 780; line-height: 1.18; letter-spacing: -.055em; }
+.reference-hero-copy h1 em { color: #245da6; font-style: normal; }
+.reference-hero-copy>p { max-width: 590px; color: #536174; font-size: 17px; line-height: 1.82; }
+.reference-hero-copy .button-row { margin-top: 32px; }
+.reference-hero-copy .btn-primary { border-color: #173f70; background: #173f70; }
+.reference-hero-copy .btn-secondary { border-color: #aab5c2; background: transparent; color: #1d2d42; }
+.reference-proof { display: grid; max-width: 610px; grid-template-columns: repeat(3,1fr); margin-top: 48px; padding-top: 23px; border-top: 1px solid #cfd6df; }
+.reference-proof>div { padding-right: 20px; }
+.reference-proof dt { color: #1c2c43; font-size: 12px; font-weight: 850; letter-spacing: .06em; }
+.reference-proof dd { margin: 5px 0 0; color: #798492; font-size: 11px; }
+
+.reference-portrait-stage { position: relative; min-height: 620px; overflow: hidden; background: #e7edf4; isolation: isolate; }
+.reference-portrait-stage::before { position: absolute; z-index: -3; inset: 0; background: linear-gradient(145deg,#eef3f7 0%,#d9e3ee 58%,#c8d6e5 100%); content: ""; }
+.reference-portrait-stage::after { position: absolute; z-index: -2; right: -20%; bottom: -30%; width: 88%; aspect-ratio: 1; border: 96px solid rgba(35,87,143,.09); border-radius: 50%; content: ""; }
+.reference-stage-line { position: absolute; z-index: 1; top: 0; left: 28px; width: 1px; height: 112px; background: #245da6; }
+.reference-stage-symbol { position: absolute; z-index: 3; top: 36px; right: 36px; width: 58px; height: 58px; }
+.reference-director-photo { position: absolute; z-index: 2; right: -5%; bottom: 0; width: 83%; height: 94%; }
+.reference-director-photo img { object-fit: contain; object-position: right bottom; }
+.reference-director-info { position: absolute; z-index: 4; bottom: 34px; left: 28px; display: flex; min-width: 310px; flex-direction: column; padding: 18px 20px; border-left: 4px solid #245da6; background: rgba(255,255,255,.96); box-shadow: 0 14px 36px rgba(24,46,74,.12); }
+.reference-director-info span { color: #245da6; font-size: 9px; font-weight: 850; letter-spacing: .12em; }
+.reference-director-info strong { margin-top: 8px; color: #142237; font-size: 24px; letter-spacing: -.04em; }
+.reference-director-info small { margin-top: 5px; color: #667487; font-size: 11px; }
+
+.reference-quick-nav { border-bottom: 1px solid #dfe4ea; background: #fff; }
+.reference-quick-nav>.container { display: grid; grid-template-columns: repeat(4,1fr); }
+.reference-quick-nav a { display: grid; min-width: 0; min-height: 104px; grid-template-columns: 28px minmax(0,1fr) 18px; gap: 12px; align-items: center; padding: 20px 24px; border-left: 1px solid #e2e6eb; color: #1f2e42; transition: background .18s ease,color .18s ease; }
+.reference-quick-nav a:last-child { border-right: 1px solid #e2e6eb; }
+.reference-quick-nav a:hover { background: #f3f6f9; color: #245da6; }
+.reference-quick-nav a>span { align-self: start; padding-top: 3px; color: #245da6; font-size: 10px; font-weight: 850; }
+.reference-quick-nav a>div { display: flex; min-width: 0; flex-direction: column; }
+.reference-quick-nav strong { font-size: 15px; letter-spacing: -.025em; }
+.reference-quick-nav small { margin-top: 6px; color: #718093; font-size: 11px; }
+.reference-quick-nav b { font-size: 17px; font-weight: 500; }
+
+.reference-latest { border-bottom: 1px solid #dfe4ea; background: #fff; }
+.reference-latest>.container { display: grid; min-height: 66px; grid-template-columns: 150px minmax(0,1fr) minmax(0,1fr) 86px; gap: 20px; align-items: center; }
+.reference-latest>.container>div:first-child { display: flex; align-items: center; gap: 9px; }
+.reference-latest>.container>div:first-child span { color: #245da6; font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+.reference-latest>.container>div:first-child strong { color: #29384d; font-size: 13px; }
+.reference-latest a:not(.reference-latest-more) { display: grid; min-width: 0; grid-template-columns: auto minmax(0,1fr) auto; gap: 9px; align-items: center; }
+.reference-latest a b { color: #245da6; font-size: 10px; }
+.reference-latest a span { overflow: hidden; color: #4d5b6d; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.reference-latest time { color: #8a95a2; font-size: 10px; }
+.reference-latest-empty { grid-column: 2/4; color: #7a8695; font-size: 12px; }
+.reference-latest-more { color: #34465d; font-size: 11px; font-weight: 750; text-align: right; }
+
+@media (max-width: 1040px) {
+  .reference-hero-grid { grid-template-columns: minmax(0,1fr) minmax(420px,.92fr); gap: 42px; }
+  .reference-hero-copy h1 { font-size: clamp(44px,5.2vw,58px); }
+  .reference-quick-nav a { padding-inline: 18px; }
+}
+@media (max-width: 840px) {
+  .reference-hero-grid { min-height: auto; grid-template-columns: 1fr; gap: 0; }
+  .reference-hero-copy { padding: 62px 0 52px; }
+  .reference-hero-copy h1 { font-size: 48px; }
+  .reference-portrait-stage { min-height: 500px; }
+  .reference-director-photo { right: -2%; width: 72%; height: 96%; }
+  .reference-quick-nav>.container { grid-template-columns: 1fr 1fr; }
+  .reference-quick-nav a:nth-child(n+3) { border-top: 1px solid #e2e6eb; }
+  .reference-quick-nav a:nth-child(2) { border-right: 1px solid #e2e6eb; }
+  .reference-latest>.container { grid-template-columns: 130px minmax(0,1fr) 80px; }
+  .reference-latest a:nth-of-type(2) { display: none; }
+  .reference-latest-empty { grid-column: 2; }
+}
+@media (max-width: 600px) {
+  .official-brand-mark { width: 40px; height: 40px; flex-basis: 40px; }
+  .reference-hero-copy { padding: 52px 0 44px; }
+  .reference-overline { font-size: 9px; }
+  .reference-hero-copy h1 { margin-block: 18px 22px; font-size: clamp(37px,10.5vw,43px); line-height: 1.22; }
+  .reference-hero-copy>p { font-size: 15px; line-height: 1.72; }
+  .reference-hero-copy .button-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 25px; }
+  .reference-hero-copy .btn { padding-inline: 10px; font-size: 12px; }
+  .reference-proof { gap: 12px; margin-top: 34px; padding-top: 18px; }
+  .reference-proof>div { padding-right: 0; }
+  .reference-proof dt { font-size: 10px; }
+  .reference-proof dd { font-size: 9px; }
+  .reference-portrait-stage { min-height: 430px; }
+  .reference-stage-line { left: 16px; height: 78px; }
+  .reference-stage-symbol { top: 20px; right: 20px; width: 48px; height: 48px; }
+  .reference-director-photo { right: -11%; width: 100%; height: 96%; }
+  .reference-director-info { right: 14px; bottom: 14px; left: 14px; min-width: 0; padding: 14px 16px; }
+  .reference-director-info strong { font-size: 21px; }
+  .reference-quick-nav>.container { grid-template-columns: 1fr; }
+  .reference-quick-nav a { min-height: 78px; padding: 14px 16px; border-top: 1px solid #e2e6eb; border-right: 1px solid #e2e6eb; }
+  .reference-quick-nav a:first-child { border-top: 0; }
+  .reference-latest>.container { min-height: 76px; grid-template-columns: 94px minmax(0,1fr); gap: 10px; }
+  .reference-latest>.container>div:first-child { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .reference-latest a:not(.reference-latest-more) { grid-template-columns: auto minmax(0,1fr); }
+  .reference-latest time,.reference-latest-more { display: none; }
+}

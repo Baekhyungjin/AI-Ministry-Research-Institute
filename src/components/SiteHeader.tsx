@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import BrandSymbol from '@/components/BrandSymbol';
 import { seedContents } from '@/lib/seed-data';
 import { ContentItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -45,7 +45,7 @@ export default function SiteHeader() {
     <>
       <div className="notice-strip"><div className="container"><span>연구소 소식</span><p>{latestNotice?.title ?? '목회AI연구소의 새로운 소식을 확인하세요.'}</p><Link href={latestNotice ? `/notices/${latestNotice.id}` : '/notices'}>자세히 보기 →</Link></div></div>
       <header className="site-header institutional-header"><div className="container nav-inner">
-        <Link href="/" className="brand institutional-brand" onClick={closeMenu} aria-label="목회AI연구소 홈"><span className="official-brand-mark"><Image src="/images/brand/ministry-ai-logo.png" alt="" fill priority sizes="48px" /></span><span><strong>목회AI연구소</strong><small>MINISTRY AI LAB</small></span></Link>
+        <Link href="/" className="brand institutional-brand" onClick={closeMenu} aria-label="목회AI연구소 홈"><span className="official-brand-mark"><BrandSymbol /></span><span><strong>목회AI연구소</strong><small>MINISTRY AI LAB</small></span></Link>
         <button className="menu-toggle" type="button" aria-expanded={open} aria-label={open ? '메뉴 닫기' : '메뉴 열기'} onClick={() => setOpen((value) => !value)}><span /><span /></button>
         <nav className={`main-nav institutional-nav ${open ? 'is-open' : ''}`} aria-label="주요 메뉴">
           {navigation.map((item) => <div className={`nav-group ${pathname.startsWith(item.href) || item.children?.some((child) => pathname.startsWith(child.href.split('?')[0])) ? 'active' : ''}`} key={item.label}><Link href={item.href} onClick={closeMenu}>{item.label}{item.children && <span aria-hidden="true">⌄</span>}</Link>{item.children && <div className="nav-dropdown">{item.children.map((child) => <Link href={child.href} onClick={closeMenu} key={child.href}><strong>{child.label}</strong><small>{child.description}</small></Link>)}</div>}</div>)}
