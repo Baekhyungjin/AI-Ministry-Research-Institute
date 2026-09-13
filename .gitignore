@@ -13,5 +13,6 @@ verification-*.png
 reference-*.png
 logo-header-*.png
 content-block-editor.png
+column-blocks-*.png
 supabase/.temp/
 docs/source-materials/
