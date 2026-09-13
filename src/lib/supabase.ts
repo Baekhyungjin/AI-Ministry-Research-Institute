@@ -1,0 +1,16 @@
+'use client';
+
+import { createBrowserClient } from '@supabase/ssr';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabasePublishableKey);
+
+export const supabase = isSupabaseConfigured
+  ? createBrowserClient(supabaseUrl!, supabasePublishableKey!)
+  : null;
+
+export function isSupabaseAdmin(appMetadata: Record<string, unknown> | undefined) {
+  return appMetadata?.role === 'admin';
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="620" viewBox="0 0 1080 620">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071426"/><stop offset="1" stop-color="#173d7a"/></linearGradient></defs>
+  <rect width="1080" height="620" rx="48" fill="url(#g)"/><circle cx="920" cy="80" r="250" fill="#2d6df6" opacity=".25"/>
+  <text x="80" y="95" fill="#8eb6ff" font-size="22" font-family="Arial,sans-serif" letter-spacing="5">MINISTRY AI LAB</text>
+  <text x="80" y="245" fill="white" font-size="72" font-family="Arial,sans-serif" font-weight="700">백형진</text>
+  <text x="80" y="300" fill="#cbd9ef" font-size="27" font-family="Arial,sans-serif">목회AI연구소 소장 · 안양선민교회 담임목사</text>
+  <line x1="80" y1="355" x2="1000" y2="355" stroke="#fff" opacity=".18"/>
+  <text x="80" y="425" fill="white" font-size="25" font-family="Arial,sans-serif">010-4416-0926</text>
+  <text x="80" y="472" fill="white" font-size="25" font-family="Arial,sans-serif">backhung65@gmail.com</text>
+  <text x="80" y="548" fill="#8eb6ff" font-size="21" font-family="Arial,sans-serif">기술보다 사람을, 도구보다 사명을 먼저.</text>
+  <text x="900" y="535" fill="white" font-size="82" font-family="Arial,sans-serif" font-weight="700">AI+</text>
+</svg>
