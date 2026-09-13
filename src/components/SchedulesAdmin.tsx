@@ -32,6 +32,7 @@ export default function SchedulesAdmin() {
       title: String(form.get('title')).trim(), category: String(form.get('category')).trim(),
       date: String(form.get('date')), time: String(form.get('time')).trim(), location: String(form.get('location')).trim(),
       capacity: Number(form.get('capacity')), status: String(form.get('status')) as ScheduleStatus,
+      capacityReached: false,
       description: String(form.get('description')).trim(),
     };
     try {
@@ -66,7 +67,7 @@ export default function SchedulesAdmin() {
         <button className="btn btn-primary" disabled={saving}>{saving ? '저장 중…' : editing ? '변경 내용 저장' : '일정 등록하기'}</button>
       </form>
       <section className="admin-panel schedule-manage"><div className="panel-heading"><div><span>ALL SCHEDULES</span><h2>등록된 일정</h2></div><b>{records.length}</b></div>
-        {[...records].sort((a,b) => a.date.localeCompare(b.date)).map((item) => <article key={item.id}><div className="manage-date"><strong>{item.date.slice(8,10)}</strong><span>{item.date.slice(5,7)}월</span></div><div><span className={`publish-state ${item.status === 'open' ? 'published' : 'draft'}`}>{item.status === 'open' ? '신청 가능' : '마감'}</span><h3>{item.title}</h3><p>{item.date} · {item.time}<br />{item.location} · 정원 {item.capacity}명</p><div className="inline-actions"><button type="button" onClick={() => beginEdit(item)}>수정</button><button type="button" onClick={() => updateRecord<ScheduleItem>('schedules', item.id, { status: item.status === 'open' ? 'closed' : 'open' })}>{item.status === 'open' ? '신청 마감' : '다시 열기'}</button><button type="button" className="danger" onClick={() => { if (confirm('이 일정을 삭제할까요?')) void deleteRecord<ScheduleItem>('schedules', item.id); }}>삭제</button></div></div></article>)}
+        {[...records].sort((a,b) => a.date.localeCompare(b.date)).map((item) => <article key={item.id}><div className="manage-date"><strong>{item.date.slice(8,10)}</strong><span>{item.date.slice(5,7)}월</span></div><div><span className={`publish-state ${item.status === 'open' ? 'published' : 'draft'}`}>{item.status === 'open' ? '신청 가능' : item.capacityReached ? '정원 마감' : '마감'}</span><h3>{item.title}</h3><p>{item.date} · {item.time}<br />{item.location} · 정원 {item.capacity}명</p><div className="inline-actions"><button type="button" onClick={() => beginEdit(item)}>수정</button><button type="button" onClick={() => item.capacityReached ? beginEdit(item) : void updateRecord<ScheduleItem>('schedules', item.id, { status: item.status === 'open' ? 'closed' : 'open', capacityReached: false })}>{item.status === 'open' ? '신청 마감' : item.capacityReached ? '정원 조정 후 열기' : '다시 열기'}</button><button type="button" className="danger" onClick={() => { if (confirm('이 일정을 삭제할까요?')) void deleteRecord<ScheduleItem>('schedules', item.id); }}>삭제</button></div></div></article>)}
       </section>
     </div>
   </div>;

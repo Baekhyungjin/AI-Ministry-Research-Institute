@@ -2,7 +2,9 @@
 
 import { randomUUID } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { headers } from 'next/headers';
 import { sendAdminNotification } from '@/lib/notification-email';
+import { consumeSubmissionRateLimit } from '@/lib/submission-rate-limit';
 
 const MINIMUM_SUPPORT_AMOUNT = 10_000;
 
@@ -53,6 +55,9 @@ export async function submitReplaySupport(input: ReplaySupportInput): Promise<Re
   const supabase = createClient(supabaseUrl, supabaseKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
+  if (!await consumeSubmissionRateLimit(supabase, await headers(), 'replay')) {
+    return { ok: false, message: '신청이 너무 자주 접수되었습니다. 10분 뒤 다시 시도해 주세요.' };
+  }
   const { data: replay, error: replayError } = await supabase
     .from('replays')
     .select('id,title')
@@ -62,8 +67,9 @@ export async function submitReplaySupport(input: ReplaySupportInput): Promise<Re
 
   if (replayError || !replay) return { ok: false, message: '공개 중인 다시보기를 찾을 수 없습니다.' };
 
+  const submissionId = `replay-access-${randomUUID()}`;
   const { error } = await supabase.from('replay_accesses').insert({
-    id: `replay-access-${randomUUID()}`,
+    id: submissionId,
     replay_id: replay.id,
     replay_title: replay.title,
     name,
@@ -86,6 +92,7 @@ export async function submitReplaySupport(input: ReplaySupportInput): Promise<Re
       { label: '연락처', value: phone }, { label: '이메일', value: email }, { label: '입금자명', value: depositorName },
       { label: '후원 금액', value: `${supportAmount.toLocaleString('ko-KR')}원` },
     ],
+    idempotencyKey: submissionId,
   });
   return { ok: true, account, replayTitle: replay.title, depositorName, supportAmount };
 }

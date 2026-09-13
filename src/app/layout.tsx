@@ -5,13 +5,15 @@ import SiteFooter from '@/components/SiteFooter';
 import AnnouncementPopup from '@/components/AnnouncementPopup';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ministry-ai-lab-rho.vercel.app'),
   title: { default: '목회AI연구소', template: '%s | 목회AI연구소' },
   description: '목회자를 위한 AI 연구, 실습 교육, 강의와 현장 컨설팅을 연결하는 목회AI연구소입니다.',
   openGraph: {
     title: '목회AI연구소',
     description: '기술보다 사람을, 도구보다 사명을 먼저 생각하는 AI 목회 연구 플랫폼입니다.',
     images: ['/opengraph-image.png'],
+    locale: 'ko_KR',
+    type: 'website',
   },
 };
 

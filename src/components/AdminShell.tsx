@@ -3,8 +3,6 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, isFirebaseConfigured } from '@/lib/firebase';
 import { isSupabaseAdmin, isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 const adminLinks = [
@@ -24,8 +22,10 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' && sessionStorage.getItem('miracle-admin-demo') === 'true') {
-      setDataMode('demo');
-      setChecking(false);
+      queueMicrotask(() => {
+        setDataMode('demo');
+        setChecking(false);
+      });
       return;
     }
 
@@ -49,33 +49,13 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       return () => data.subscription.unsubscribe();
     }
 
-    const firebaseAuth = auth;
-    if (firebaseAuth) return onAuthStateChanged(firebaseAuth, async (user) => {
-      if (!user) {
-        router.replace('/login');
-        return;
-      }
-
-      try {
-        const token = await user.getIdTokenResult();
-        if (token.claims.admin !== true) {
-          await signOut(firebaseAuth);
-          router.replace('/login?reason=admin');
-          return;
-        }
-
-        setChecking(false);
-      } catch {
-        router.replace('/login?reason=admin');
-      }
-    });
     router.replace('/login');
   }, [router]);
 
   async function logout() {
     if (supabase) await supabase.auth.signOut();
-    if (auth) await signOut(auth);
     sessionStorage.removeItem('miracle-admin-demo');
+    document.cookie = 'miracle-admin-demo=; path=/; max-age=0; samesite=lax';
     router.push('/login');
   }
 
@@ -83,7 +63,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div><span className="admin-kicker">CONTROL CENTER</span><h2>연구소 운영실</h2><span className={`data-mode ${dataMode === 'ready' ? 'live' : ''}`}>{dataMode === 'demo' ? '로컬 예시 모드' : dataMode === 'ready' ? 'Supabase 운영 모드' : dataMode === 'missing' ? 'DB 구조 확인 필요' : isFirebaseConfigured ? 'Firebase 연결됨' : isSupabaseConfigured ? 'Supabase 설정됨' : '로컬 관리자 모드'}</span></div>
+        <div><span className="admin-kicker">CONTROL CENTER</span><h2>연구소 운영실</h2><span className={`data-mode ${dataMode === 'ready' ? 'live' : ''}`}>{dataMode === 'demo' ? '로컬 예시 모드' : dataMode === 'ready' ? 'Supabase 운영 모드' : dataMode === 'missing' ? 'DB 구조 확인 필요' : isSupabaseConfigured ? 'Supabase 설정됨' : '로컬 관리자 모드'}</span></div>
         <nav>{adminLinks.map((link) => {
           const active = link.exact ? pathname === link.href : pathname.startsWith(link.href);
           return <Link href={link.href} className={active ? 'active' : ''} key={link.href}>{link.label}<span>→</span></Link>;

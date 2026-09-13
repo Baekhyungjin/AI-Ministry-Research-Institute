@@ -1,7 +1,5 @@
 'use client';
 
-import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
-import { db } from './firebase';
 import { supabase } from './supabase';
 
 export type CollectionName = 'contents' | 'schedules' | 'applications' | 'gpts' | 'apps' | 'replays' | 'partner_applications' | 'replay_accesses';
@@ -25,6 +23,7 @@ const fieldToDatabase: Record<string, string> = {
   accessUrl: 'access_url', priceLabel: 'price_label', thumbnailUrl: 'thumbnail_url', videoUrl: 'video_url',
   partnerType: 'partner_type', replayId: 'replay_id', replayTitle: 'replay_title',
   depositorName: 'depositor_name', supportAmount: 'support_amount', paymentStatus: 'payment_status',
+  capacityReached: 'capacity_reached',
 };
 
 const fieldFromDatabase = Object.fromEntries(
@@ -76,11 +75,11 @@ export function subscribeRecords<T extends StoredRecord>(
   listener: (records: T[]) => void,
   publishedOnly = false,
   selectedFields = '*',
+  onError?: (message: string) => void,
 ) {
   const supabaseClient = supabase;
   if (supabaseClient && !isLocalDemo()) {
     let active = true;
-    listener(localRead(name, seed));
     const fetchRecords = async () => {
       try {
         let source = supabaseClient.from(name).select(selectedFields);
@@ -88,14 +87,17 @@ export function subscribeRecords<T extends StoredRecord>(
         const { data, error } = await source.order('created_at', { ascending: false });
         if (!active) return;
         if (error) {
-          listener(localRead(name, seed));
+          onError?.('데이터를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+          listener([]);
           return;
         }
         const records = ((data ?? []) as unknown as Record<string, unknown>[]).map((record) => fromDatabase<T>(record));
-        listener(records.length ? records : seed);
+        onError?.('');
+        listener(records);
       } catch {
         if (!active) return;
-        listener(localRead(name, seed));
+        onError?.('데이터 연결 상태를 확인해 주세요.');
+        listener([]);
       }
     };
 
@@ -114,21 +116,8 @@ export function subscribeRecords<T extends StoredRecord>(
     };
   }
 
-  if (db) {
-    const source = publishedOnly && name === 'contents'
-      ? query(collection(db, name), where('status', '==', 'published'))
-      : collection(db, name);
-    return onSnapshot(
-      source,
-      (snapshot) => {
-        const records = snapshot.docs.map((item) => ({ id: item.id, ...item.data() })) as T[];
-        listener(records.length ? records : seed);
-      },
-      () => listener(localRead(name, seed)),
-    );
-  }
-
-  const emit = () => listener(localRead(name, seed));
+  const fallbackSeed = isLocalDemo() ? seed : [];
+  const emit = () => listener(localRead(name, fallbackSeed));
   const storageListener = (event: StorageEvent) => {
     if (event.key === storageKey(name)) emit();
   };
@@ -144,15 +133,8 @@ export function subscribeRecords<T extends StoredRecord>(
 export async function createRecord<T extends StoredRecord>(name: CollectionName, record: T) {
   if (supabase && !isLocalDemo()) {
     const { error } = await supabase.from(name).insert(toDatabase(record));
-    if (error) {
-      if (process.env.NODE_ENV === 'development') { const records = localRead<T>(name, []); localWrite(name, [record, ...records]); return; }
-      throw error;
-    }
+    if (error) throw error;
     window.dispatchEvent(new CustomEvent(eventName(name)));
-    return;
-  }
-  if (db) {
-    await setDoc(doc(db, name, record.id), record);
     return;
   }
   const records = localRead<T>(name, []);
@@ -166,10 +148,6 @@ export async function updateRecord<T extends StoredRecord>(name: CollectionName,
     window.dispatchEvent(new CustomEvent(eventName(name)));
     return;
   }
-  if (db) {
-    await setDoc(doc(db, name, id), changes, { merge: true });
-    return;
-  }
   const records = localRead<T>(name, []);
   localWrite(name, records.map((record) => (record.id === id ? { ...record, ...changes } : record)));
 }
@@ -179,10 +157,6 @@ export async function deleteRecord<T extends StoredRecord>(name: CollectionName,
     const { error } = await supabase.from(name).delete().eq('id', id);
     if (error) throw error;
     window.dispatchEvent(new CustomEvent(eventName(name)));
-    return;
-  }
-  if (db) {
-    await deleteDoc(doc(db, name, id));
     return;
   }
   localWrite(name, localRead<T>(name, []).filter((record) => record.id !== id));

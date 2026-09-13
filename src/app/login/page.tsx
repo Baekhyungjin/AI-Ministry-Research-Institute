@@ -2,8 +2,6 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, isFirebaseConfigured } from '@/lib/firebase';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
@@ -16,7 +14,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get('reason') === 'admin') {
-      setError('이 계정에는 관리자 권한이 없습니다. 관리자 계정으로 로그인해 주세요.');
+      queueMicrotask(() => setError('이 계정에는 관리자 권한이 없습니다. 관리자 계정으로 로그인해 주세요.'));
     }
     if (supabase) {
       void supabase
@@ -41,8 +39,6 @@ export default function LoginPage() {
           password: String(form.get('password')),
         });
         if (loginError) throw loginError;
-      } else if (auth) {
-        await signInWithEmailAndPassword(auth, email, String(form.get('password')));
       } else {
         throw new Error('관리자 인증이 연결되지 않았습니다.');
       }
@@ -81,10 +77,12 @@ export default function LoginPage() {
 
   function enterDemo() {
     sessionStorage.setItem('miracle-admin-demo', 'true');
+    document.cookie = 'miracle-admin-demo=true; path=/; max-age=86400; samesite=lax';
     router.push('/admin');
+    router.refresh();
   }
 
-  const isAuthConfigured = isSupabaseConfigured || isFirebaseConfigured;
+  const isAuthConfigured = isSupabaseConfigured;
 
   return (
     <section className="login-page">

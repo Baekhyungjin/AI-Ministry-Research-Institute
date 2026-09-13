@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendAdminNotification } from '@/lib/notification-email';
+import { consumeSubmissionRateLimit } from '@/lib/submission-rate-limit';
 
 type SubmissionBody = {
   type?: 'application' | 'partner';
@@ -29,12 +30,19 @@ export async function POST(request: Request) {
   const payload = body.payload ?? {};
   if (clean(payload.website)) return NextResponse.json({ ok: false, message: '신청 내용을 다시 확인해 주세요.' }, { status: 400 });
   if (payload.consent !== true) return NextResponse.json({ ok: false, message: '개인정보 수집·이용 동의가 필요합니다.' }, { status: 400 });
+  if (body.type !== 'application' && body.type !== 'partner') {
+    return NextResponse.json({ ok: false, message: '지원하지 않는 신청 유형입니다.' }, { status: 400 });
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!supabaseUrl || !supabaseKey) return NextResponse.json({ ok: false, message: '접수 시스템 연결을 확인하고 있습니다.' }, { status: 503 });
 
   const supabase = createClient(supabaseUrl, supabaseKey, { auth: { autoRefreshToken: false, persistSession: false } });
+  const rateLimitScope = body.type === 'partner' ? 'partner' : 'application';
+  if (!await consumeSubmissionRateLimit(supabase, request.headers, rateLimitScope)) {
+    return NextResponse.json({ ok: false, message: '신청이 너무 자주 접수되었습니다. 10분 뒤 다시 시도해 주세요.' }, { status: 429 });
+  }
   const name = clean(payload.name, 80);
   const church = clean(payload.church, 120);
   const role = clean(payload.role, 100);
@@ -49,8 +57,9 @@ export async function POST(request: Request) {
   if (body.type === 'partner') {
     const partnerType = payload.partnerType === 'individual' ? 'individual' : 'church';
     if (partnerType === 'church' && !church) return NextResponse.json({ ok: false, message: '교회·기관명을 입력해 주세요.' }, { status: 400 });
+    const submissionId = `partner-${randomUUID()}`;
     const { error } = await supabase.from('partner_applications').insert({
-      id: `partner-${randomUUID()}`, partner_type: partnerType, name, church, role, phone, email, message,
+      id: submissionId, partner_type: partnerType, name, church, role, phone, email, message,
       status: 'new', consent: true, created_at: new Date().toISOString(),
     });
     if (error) return NextResponse.json({ ok: false, message: '파트너 신청을 저장하지 못했습니다.' }, { status: 500 });
@@ -63,11 +72,11 @@ export async function POST(request: Request) {
         { label: '성함', value: name }, { label: '교회·기관', value: church }, { label: '직분·역할', value: role },
         { label: '연락처', value: phone }, { label: '이메일', value: email }, { label: '신청 내용', value: message },
       ],
+      idempotencyKey: submissionId,
     });
     return NextResponse.json({ ok: true, notificationSent: notification.sent }, { status: 201 });
   }
 
-  if (body.type !== 'application') return NextResponse.json({ ok: false, message: '지원하지 않는 신청 유형입니다.' }, { status: 400 });
   const kind = payload.kind === 'lecture' || payload.kind === 'schedule' ? payload.kind : 'inquiry';
   const scheduleId = clean(payload.scheduleId, 160) || null;
   let scheduleTitle = clean(payload.scheduleTitle, 240) || null;
@@ -94,8 +103,9 @@ export async function POST(request: Request) {
     scheduleTitle = schedule.title;
   }
 
+  const submissionId = `application-${randomUUID()}`;
   const insertRecord: Record<string, unknown> = {
-    id: `application-${randomUUID()}`, kind, name, church, role, phone, email, message,
+    id: submissionId, kind, name, church, role, phone, email, message,
     schedule_id: scheduleId, schedule_title: scheduleTitle, requested_date: requestedDate,
     status: 'new', consent: true, created_at: new Date().toISOString(),
   };
@@ -105,7 +115,15 @@ export async function POST(request: Request) {
     insertRecord.message = `[희망 날짜: ${requestedDate}]\n${message}`;
     ({ error } = await supabase.from('applications').insert(insertRecord));
   }
-  if (error) return NextResponse.json({ ok: false, message: '문의 및 신청을 저장하지 못했습니다.' }, { status: 500 });
+  if (error) {
+    if (error.message.includes('SCHEDULE_FULL')) {
+      return NextResponse.json({ ok: false, message: '방금 정원이 마감되었습니다. 다른 일정을 선택해 주세요.' }, { status: 409 });
+    }
+    if (error.message.includes('SCHEDULE_NOT_OPEN')) {
+      return NextResponse.json({ ok: false, message: '현재 신청할 수 없는 일정입니다.' }, { status: 409 });
+    }
+    return NextResponse.json({ ok: false, message: '문의 및 신청을 저장하지 못했습니다.' }, { status: 500 });
+  }
 
   const kindLabel = kind === 'lecture' ? '강의·컨설팅 요청' : kind === 'schedule' ? '등록 일정 신청' : '일반·협업 문의';
   const notification = await sendAdminNotification({
@@ -117,6 +135,7 @@ export async function POST(request: Request) {
       { label: '희망 날짜', value: requestedDate ?? undefined }, { label: '신청 일정', value: scheduleTitle ?? undefined },
       { label: '문의 내용', value: message },
     ],
+    idempotencyKey: submissionId,
   });
   return NextResponse.json({ ok: true, notificationSent: notification.sent }, { status: 201 });
 }

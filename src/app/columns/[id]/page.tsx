@@ -1,2 +1,25 @@
 import ContentDetail from '@/components/ContentDetail';
-export default function ColumnDetailPage() { return <ContentDetail kind="column" />; }
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { getPublishedContent } from '@/lib/public-data';
+
+type Props = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const item = await getPublishedContent(id, 'column');
+  if (!item) return { title: '칼럼을 찾을 수 없습니다' };
+  return {
+    title: item.title,
+    description: item.excerpt,
+    alternates: { canonical: `/columns/${item.id}` },
+    openGraph: { title: item.title, description: item.excerpt, images: item.imageUrl ? [item.imageUrl] : ['/opengraph-image.png'] },
+  };
+}
+
+export default async function ColumnDetailPage({ params }: Props) {
+  const { id } = await params;
+  const item = await getPublishedContent(id, 'column');
+  if (!item) notFound();
+  return <ContentDetail item={item} />;
+}

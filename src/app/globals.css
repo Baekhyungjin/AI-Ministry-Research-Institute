@@ -1100,3 +1100,21 @@ p,li,figcaption { text-wrap: pretty; }
 @media (max-width: 1120px) {
   .content-admin-layout { grid-template-columns: 1fr; }
 }
+
+/* Operational forms, privacy and mobile readability. */
+.privacy-page { max-width: 860px; }
+.privacy-page>section { padding: 28px 0; border-top: 1px solid var(--hairline); }
+.privacy-page>section h2 { margin-bottom: 10px; font-size: 22px; letter-spacing: -.025em; }
+.privacy-page>section p { color: var(--steel); font-size: 15px; line-height: 1.85; }
+.privacy-page a:not(.btn),.consent-row a { color: var(--brand-blue); font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
+.privacy-effective { margin: 12px 0 26px; color: var(--steel); font-size: 12px; }
+.admin-list-tools { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 18px; padding: 16px 18px; border: 1px solid var(--hairline); border-radius: 12px; background: white; }
+.admin-list-tools label { display: grid; flex: 1 1 440px; gap: 7px; color: var(--steel); font-size: 11px; font-weight: 800; }
+.admin-list-tools input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #ced8e4; border-radius: 8px; font: inherit; }
+.admin-list-tools .btn { min-height: 44px; }
+@media (max-width: 680px) {
+  .admin-list-tools { align-items: stretch; flex-direction: column; }
+  .admin-list-tools label { flex-basis: auto; }
+  input,select,textarea { font-size: 16px; }
+  .schedule-cell,.calendar-day { min-height: 48px; }
+}

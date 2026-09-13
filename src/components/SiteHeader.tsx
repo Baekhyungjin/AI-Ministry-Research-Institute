@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BrandSymbol from '@/components/BrandSymbol';
 import { seedContents } from '@/lib/seed-data';
 import { ContentItem } from '@/lib/types';
@@ -33,10 +33,13 @@ const navigation = [
 export default function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [now, setNow] = useState<number | null>(null);
   const { records: contents } = useRecords<ContentItem>('contents', seedContents, true);
-  const now = Date.now();
+  useEffect(() => {
+    queueMicrotask(() => setNow(Date.now()));
+  }, []);
   const latestNotice = contents
-    .filter((item) => item.kind === 'notice' && item.status === 'published' && (!item.startsAt || new Date(item.startsAt).getTime() <= now) && (!item.endsAt || new Date(item.endsAt).getTime() >= now))
+    .filter((item) => item.kind === 'notice' && item.status === 'published' && now !== null && (!item.startsAt || new Date(item.startsAt).getTime() <= now) && (!item.endsAt || new Date(item.endsAt).getTime() >= now))
     .sort((a,b) => (b.priority || 0) - (a.priority || 0) || b.publishedAt.localeCompare(a.publishedAt))
     .find((item) => !item.noticePlacement || item.noticePlacement === 'strip');
   const closeMenu = () => setOpen(false);

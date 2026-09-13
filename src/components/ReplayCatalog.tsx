@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { submitReplaySupport } from '@/app/replays/actions';
 import { seedReplays } from '@/lib/seed-data';
@@ -76,7 +77,7 @@ export default function ReplayCatalog() {
         <label>입금자명<input name="depositorName" autoComplete="off" required /></label>
       </div>
       <input className="form-trap" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-      <label className="consent-row"><input type="checkbox" name="consent" required /><span>신청 처리와 입금 확인을 위한 개인정보 수집·이용에 동의합니다.</span></label>
+      <label className="consent-row"><input type="checkbox" name="consent" required /><span>신청 처리와 입금 확인을 위한 개인정보 수집·이용에 동의합니다. <Link href="/privacy" target="_blank">내용 보기</Link></span></label>
       {error ? <p className="form-error" role="alert">{error}</p> : null}
       <button className="btn btn-primary" disabled={saving}>{saving ? '신청 저장 중…' : '후원 신청하고 계좌 확인'}</button>
     </form></div>}

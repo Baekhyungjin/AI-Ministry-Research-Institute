@@ -45,6 +45,7 @@ export interface ScheduleItem {
   time: string;
   location: string;
   capacity: number;
+  capacityReached?: boolean;
   status: ScheduleStatus;
   description: string;
   createdAt: string;

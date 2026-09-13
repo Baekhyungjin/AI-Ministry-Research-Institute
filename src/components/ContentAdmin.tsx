@@ -43,10 +43,14 @@ export default function ContentAdmin() {
     const image = form.get('image');
     let imageUrl = editing?.imageUrl ?? null;
     let contentBlocks = kind === 'column' ? blocks : [];
+    const uploadedUrls: string[] = [];
 
     try {
       if (form.get('removeImage') === 'on') imageUrl = null;
-      if (image instanceof File && image.size > 0) imageUrl = await uploadContentImage(image, kind);
+      if (image instanceof File && image.size > 0) {
+        imageUrl = await uploadContentImage(image, kind);
+        uploadedUrls.push(imageUrl);
+      }
 
       if (kind === 'column') {
         const resolvedBlocks: ContentBlock[] = [];
@@ -58,13 +62,17 @@ export default function ContentAdmin() {
           const blockImage = form.get(`block-image-${block.id}`);
           const removeBlockImage = form.get(`remove-block-image-${block.id}`) === 'on';
           let blockImageUrl = removeBlockImage ? null : block.imageUrl;
-          if (blockImage instanceof File && blockImage.size > 0) blockImageUrl = await uploadManagedImage(blockImage, 'column');
+          if (blockImage instanceof File && blockImage.size > 0) {
+            blockImageUrl = await uploadManagedImage(blockImage, 'column');
+            uploadedUrls.push(blockImageUrl);
+          }
           resolvedBlocks.push({ ...block, imageUrl: blockImageUrl });
         }
         contentBlocks = resolvedBlocks;
         if (!hasMeaningfulContent(contentBlocks)) throw new Error('칼럼 본문 블록에 내용을 입력해 주세요.');
       }
     } catch (error) {
+      await Promise.allSettled(uploadedUrls.map((url) => deleteManagedImage(url)));
       setMessage(error instanceof Error ? error.message : '본문 또는 이미지를 처리하지 못했습니다.');
       setSaving(false);
       return;
@@ -111,6 +119,7 @@ export default function ContentAdmin() {
         setMessage(item.status === 'published' ? '콘텐츠를 공개했습니다.' : '초안으로 저장했습니다.');
       }
     } catch {
+      await Promise.allSettled(uploadedUrls.map((url) => deleteManagedImage(url)));
       setMessage('저장하지 못했습니다. 잠시 후 다시 시도해 주세요.');
     } finally {
       setSaving(false);

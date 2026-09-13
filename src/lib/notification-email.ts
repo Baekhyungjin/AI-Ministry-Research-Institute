@@ -11,6 +11,7 @@ type NotificationInput = {
   subject: string;
   replyTo?: string;
   fields: NotificationField[];
+  idempotencyKey?: string;
 };
 
 const escapeHtml = (value: string | number) => String(value)
@@ -20,7 +21,7 @@ const escapeHtml = (value: string | number) => String(value)
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&#039;');
 
-export async function sendAdminNotification({ subject, replyTo, fields }: NotificationInput) {
+export async function sendAdminNotification({ subject, replyTo, fields, idempotencyKey }: NotificationInput) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return { sent: false, reason: 'not-configured' as const };
 
@@ -38,7 +39,7 @@ export async function sendAdminNotification({ subject, replyTo, fields }: Notifi
     replyTo: replyTo && /^\S+@\S+\.\S+$/.test(replyTo) ? replyTo : undefined,
     subject,
     html: `<div style="font-family:Arial,'Noto Sans KR',sans-serif;color:#122039;line-height:1.65"><h1 style="font-size:22px">${escapeHtml(subject)}</h1><p>목회AI연구소 홈페이지에 새로운 접수가 도착했습니다.</p><table style="border-collapse:collapse;width:100%;max-width:680px">${rows}</table><p style="margin-top:24px;color:#6c7889;font-size:12px">관리자 페이지에서도 접수 상태를 확인할 수 있습니다.</p></div>`,
-  });
+  }, idempotencyKey ? { idempotencyKey } : undefined);
 
   if (error) {
     console.error('Admin notification email failed', error);

@@ -1,21 +1,11 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import { seedContents } from '@/lib/seed-data';
-import { ContentItem, ContentKind } from '@/lib/types';
-import { useRecords } from '@/lib/use-records';
+import { ContentItem } from '@/lib/types';
 import ContentBlocks from '@/components/ContentBlocks';
 import { legacyBodyToBlocks } from '@/lib/content-blocks';
 
-export default function ContentDetail({ kind }: { kind: ContentKind }) {
-  const params = useParams<{ id: string }>();
-  const { records } = useRecords<ContentItem>('contents', seedContents, true);
-  const item = records.find((record) => record.id === params.id && record.kind === kind && record.status === 'published');
-  const back = kind === 'column' ? '/columns' : '/notices';
-
-  if (!item) return <section className="page-section"><div className="narrow-container empty-state"><h1>글을 찾을 수 없습니다.</h1><Link href={back} className="btn btn-secondary">목록으로</Link></div></section>;
+export default function ContentDetail({ item }: { item: ContentItem }) {
+  const back = item.kind === 'column' ? '/columns' : '/notices';
 
   return (
     <article className="article-page">
