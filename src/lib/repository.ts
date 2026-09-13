@@ -15,6 +15,7 @@ const storageKey = (name: CollectionName) => `miracle-ai:${DATA_VERSION}:${name}
 
 const fieldToDatabase: Record<string, string> = {
   imageUrl: 'image_url',
+  contentBlocks: 'content_blocks',
   publishedAt: 'published_at',
   createdAt: 'created_at',
   scheduleId: 'schedule_id',

@@ -11,5 +11,7 @@ npm-debug.log*
 .agents/
 verification-*.png
 reference-*.png
+logo-header-*.png
+content-block-editor.png
 supabase/.temp/
 docs/source-materials/

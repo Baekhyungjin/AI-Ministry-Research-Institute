@@ -7,12 +7,22 @@ export type ResourceStatus = 'draft' | 'published';
 export type GptPlan = 'free' | 'paid';
 export type ReplayPaymentStatus = 'pending' | 'confirmed' | 'cancelled';
 
+export type ContentBlock =
+  | { id: string; type: 'paragraph'; text: string }
+  | { id: string; type: 'heading'; text: string; level: 2 | 3 }
+  | { id: string; type: 'quote'; text: string; caption?: string }
+  | { id: string; type: 'list'; items: string[]; ordered?: boolean }
+  | { id: string; type: 'image'; imageUrl?: string | null; alt: string; caption?: string }
+  | { id: string; type: 'link'; label: string; url: string; description?: string }
+  | { id: string; type: 'divider' };
+
 export interface ContentItem {
   id: string;
   kind: ContentKind;
   title: string;
   excerpt: string;
   body: string;
+  contentBlocks?: ContentBlock[];
   category: string;
   status: PublishStatus;
   featured: boolean;
