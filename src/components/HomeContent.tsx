@@ -85,8 +85,13 @@ export default function HomeContent() {
 
       <section className="portal-section institute-profile"><div className="container institute-profile-grid" data-reveal>
         <div className="profile-portrait"><Image src="/images/about/director-baekhyungjin.png" alt="백형진 목회AI연구소 소장" fill sizes="(max-width: 760px) 88vw, 340px" /></div>
-        <div className="profile-statement"><span className="eyebrow">ABOUT THE INSTITUTE</span><blockquote>“기술보다 사람을,<br />도구보다 사명을 먼저 생각합니다.”</blockquote><p>안양선민교회 목회 현장을 기반으로 설교 연구, 교회 행정, 콘텐츠 제작과 AI 윤리를 함께 연구합니다.</p><div><Link href="/about" className="btn btn-primary">연구소 소개</Link><Link href="/projects" className="btn btn-tertiary">사역 프로젝트</Link></div></div>
-        <div className="profile-note"><strong>백형진 소장</strong><span>안양선민교회 담임목사<br />AI 목회 활용 연구자·교육자</span></div>
+        <div className="profile-statement">
+          <span className="eyebrow">ABOUT THE INSTITUTE</span>
+          <blockquote>“기술보다 사람을,<br />도구보다 사명을 먼저 생각합니다.”</blockquote>
+          <p>안양선민교회 목회 현장을 기반으로 설교 연구, 교회 행정, 콘텐츠 제작과 AI 윤리를 함께 연구합니다.</p>
+          <div className="profile-note"><strong>백형진 소장</strong><span>안양선민교회 담임목사 · AI 목회 활용 연구자·교육자</span></div>
+          <div className="profile-actions"><Link href="/about" className="btn btn-primary">연구소 소개</Link><Link href="/projects" className="btn btn-tertiary">사역 프로젝트</Link></div>
+        </div>
       </div></section>
 
       <section className="portal-contact"><div className="container portal-contact-inner" data-reveal><div><span>CONTACT</span><h2 className="fluid-display-title"><span>교회에 필요한 AI 활용,</span>{' '}<span>함께 설계하겠습니다.</span></h2></div><div><p>강의, 컨설팅, 협력 프로젝트에 관해 현재의 고민부터 편하게 남겨주세요.</p><Link href="/apply" className="btn btn-white">문의 및 강의 신청 →</Link></div></div></section>

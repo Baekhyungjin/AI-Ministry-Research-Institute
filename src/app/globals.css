@@ -423,11 +423,11 @@ main { min-height: 60vh; }
 .program-list article > div { display: flex; justify-content: space-between; color: #9ab4d8; font-size: 10px; }.program-list h3 { margin: 13px 0 6px; font-size: 16px; line-height: 1.35; }.program-list p { color: rgba(255,255,255,.55); font-size: 11px; line-height: 1.55; }.program-list article > a { margin-top: auto; color: #9cc1ff; font-size: 11px; font-weight: 800; }
 
 .institute-profile { overflow: hidden; background: #f2f5fa; }
-.institute-profile-grid { display: grid; grid-template-columns: 340px minmax(0,1fr) 190px; align-items: end; gap: 64px; min-height: 430px; }
+.institute-profile-grid { display: grid; grid-template-columns: 340px minmax(0,700px); align-items: end; justify-content: start; gap: 64px; min-height: 430px; }
 .profile-portrait { position: relative; align-self: stretch; min-height: 430px; border-radius: 24px 24px 0 0; background: linear-gradient(150deg,#fff,#dbe7f8); }
 .profile-portrait img { object-fit: contain; object-position: center bottom; }
-.profile-statement { align-self: center; padding: 56px 0; }.profile-statement blockquote { max-width: 620px; color: #0b1c35; font-size: clamp(33px,3.6vw,50px); font-weight: 760; line-height: 1.23; letter-spacing: -.05em; }.profile-statement > p { max-width: 570px; margin: 22px 0 28px; color: #667487; font-size: 15px; line-height: 1.75; }.profile-statement > div { display: flex; gap: 10px; }
-.profile-note { align-self: end; padding: 24px 0 42px; border-top: 1px solid #cfd7e3; }.profile-note strong,.profile-note span { display: block; }.profile-note strong { color: #17243a; font-size: 14px; }.profile-note span { margin-top: 7px; color: #768294; font-size: 11px; line-height: 1.65; }
+.profile-statement { align-self: center; padding: 56px 0; }.profile-statement blockquote { max-width: 620px; color: #0b1c35; font-size: clamp(33px,3.6vw,50px); font-weight: 760; line-height: 1.23; letter-spacing: -.05em; }.profile-statement > p { max-width: 570px; margin: 22px 0 24px; color: #667487; font-size: 15px; line-height: 1.75; }.profile-actions { display: flex; gap: 10px; }
+.profile-note { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 14px; max-width: 570px; margin: 0 0 28px; padding: 15px 0; border-top: 1px solid #cfd7e3; border-bottom: 1px solid #cfd7e3; }.profile-note strong,.profile-note span { display: block; }.profile-note strong { color: #17243a; font-size: 14px; white-space: nowrap; }.profile-note span { padding-left: 14px; border-left: 1px solid #d9e0ea; color: #768294; font-size: 11px; line-height: 1.65; }
 .portal-contact { padding: 70px 0; background: #2467e8; color: white; }.portal-contact-inner { display: grid; grid-template-columns: 1.15fr .85fr; align-items: end; gap: 70px; }.portal-contact-inner > div:first-child > span { color: #bcd2ff; font-size: 10px; font-weight: 900; letter-spacing: .16em; }.portal-contact h2 { margin-top: 11px; font-size: clamp(35px,4vw,52px); line-height: 1.16; letter-spacing: -.045em; }.portal-contact-inner > div:last-child { display: flex; align-items: center; justify-content: space-between; gap: 28px; }.portal-contact p { color: rgba(255,255,255,.75); font-size: 13px; line-height: 1.7; }
 
 .institutional-footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 58px; }.footer-wordmark { display: flex; flex-direction: column; margin-bottom: 30px; font-size: 17px; font-weight: 800; }.footer-wordmark small { margin-top: 3px; color: #677487; font-size: 8px; letter-spacing: .14em; }
@@ -436,7 +436,7 @@ main { min-height: 60vh; }
   .institutional-nav { gap: 16px; }.institutional-nav .nav-admin { display: none !important; }
   .portal-hero-grid { grid-template-columns: 1fr 430px; gap: 38px; }.portal-intro h1 { font-size: 54px; }
   .portal-shortcut { padding: 17px; }.program-desk-grid { grid-template-columns: 1.3fr .7fr; }
-  .institute-profile-grid { grid-template-columns: 300px 1fr; gap: 44px; }.profile-note { display: none; }
+  .institute-profile-grid { grid-template-columns: 300px minmax(0,1fr); gap: 44px; }
 }
 
 @media (max-width: 840px) {
@@ -460,7 +460,7 @@ main { min-height: 60vh; }
   .featured-research-image { aspect-ratio: 16/10; }.featured-research-copy { padding: 22px; }.featured-research-copy h3 { font-size: 23px; }
   .program-feature { min-height: 340px; }.program-feature > div:last-child { right: 20px; bottom: 20px; left: 20px; flex-direction: column; align-items: flex-start; }.program-feature strong { font-size: 20px; }.program-feature b { margin-left: 0; }
   .program-list { grid-template-columns: 1fr; }.program-list article { min-height: 160px; }
-  .institute-profile-grid { grid-template-columns: 1fr; gap: 0; }.profile-portrait { width: 88%; min-height: 390px; margin: 0 auto; }.profile-statement { padding: 42px 0 4px; }.profile-statement blockquote { font-size: 34px; }.profile-statement > div { flex-wrap: wrap; }
+  .institute-profile-grid { grid-template-columns: 1fr; gap: 0; }.profile-portrait { width: 88%; min-height: 390px; margin: 0 auto; }.profile-statement { padding: 42px 0 4px; }.profile-statement blockquote { font-size: 34px; }.profile-actions { flex-wrap: wrap; }.profile-note { grid-template-columns: 1fr; gap: 5px; }.profile-note span { padding-left: 0; border-left: 0; }
   .portal-contact-inner > div:last-child { align-items: flex-start; flex-direction: column; }.portal-contact h2 { font-size: 35px; }
   .institutional-footer-grid { grid-template-columns: 1fr; }.institutional-footer-grid > div:last-child { grid-column: auto; }
 }
