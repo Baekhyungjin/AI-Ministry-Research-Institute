@@ -1000,3 +1000,43 @@ p,li,figcaption { text-wrap: pretty; }
 .portal-contact { background: linear-gradient(115deg,#6b35ce 0%,#345bd8 50%,#087fca 100%); }
 .site-footer { position: relative; border-top: 4px solid transparent; border-image: var(--brand-gradient) 1; background: #0c1220; }
 .text-link:hover,.reference-latest-more:hover { color: var(--brand-blue); }
+
+/* Keep the official white cross legible on the white navigation surface. */
+.institutional-header .official-brand-mark {
+  position: relative;
+  display: inline-flex;
+  width: 64px;
+  height: 48px;
+  flex: 0 0 64px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 7px 6px;
+  border: 1px solid rgba(34, 54, 94, .2);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(239, 45, 204, .28), transparent 43%),
+    radial-gradient(circle at 86% 82%, rgba(20, 200, 242, .2), transparent 42%),
+    linear-gradient(145deg, #151b38 0%, #17284f 100%);
+  box-shadow: 0 7px 20px rgba(21, 35, 69, .15), inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+.institutional-header .official-brand-mark img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .16));
+  transform: none;
+  animation: none;
+}
+@media (max-width: 600px) {
+  .institutional-header .official-brand-mark {
+    width: 54px;
+    height: 42px;
+    flex-basis: 54px;
+    padding: 6px 5px;
+    border-radius: 11px;
+  }
+}
