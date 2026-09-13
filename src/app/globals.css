@@ -791,9 +791,13 @@ p,li,figcaption { text-wrap: pretty; }
 }
 
 /* 2026 editorial homepage refresh: calm, content-first institutional design. */
-.official-brand-mark { width: 60px; height: 48px; flex: 0 0 60px; overflow: hidden; border: 0; background: #fff; }
-.official-brand-mark img,.footer-official-logo img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.42); }
-.footer-official-logo { width: 66px; height: 56px; overflow: hidden; border: 0; border-radius: 8px; background: #fff; }
+.official-brand-mark { width: 68px; height: 47px; flex: 0 0 68px; overflow: visible; border: 0; background: transparent; }
+.official-brand-mark img,.footer-official-logo img { display: block; width: 100%; height: 100%; object-fit: contain; transform: none; animation: none; }
+.footer-brand-lockup { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+.footer-brand-lockup .footer-wordmark { margin-bottom: 0; }
+.footer-official-logo { width: 82px; height: 56px; flex: 0 0 82px; overflow: visible; margin: 0; border: 0; border-radius: 0; background: transparent; }
+.card-logo { width: 72px; height: 50px; overflow: visible; border-radius: 0; }
+.card-logo img { width: 100%; height: 100%; object-fit: contain; transform: none; animation: none; }
 
 .reference-hero { overflow: hidden; border-bottom: 1px solid #dde3ea; background: radial-gradient(circle at 5% 18%, rgba(239,45,204,.055), transparent 28%), radial-gradient(circle at 92% 12%, rgba(22,115,242,.07), transparent 30%), #f6f7f9; }
 .reference-hero-grid { display: grid; min-height: 620px; grid-template-columns: minmax(0,1.02fr) minmax(460px,.98fr); gap: 72px; align-items: stretch; }
@@ -862,7 +866,7 @@ p,li,figcaption { text-wrap: pretty; }
   .reference-latest-empty { grid-column: 2; }
 }
 @media (max-width: 600px) {
-  .official-brand-mark { width: 52px; height: 42px; flex-basis: 52px; }
+  .official-brand-mark { width: 58px; height: 40px; flex-basis: 58px; }
   .reference-hero-copy { padding: 52px 0 44px; }
   .reference-overline { font-size: 9px; }
   .reference-hero-copy h1 { margin-block: 18px 22px; font-size: clamp(37px,10.5vw,43px); line-height: 1.22; }
