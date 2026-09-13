@@ -21,6 +21,12 @@
   --blue-deep: #1d4ed8;
   --cyan: #3daeff;
   --purple: #a855f7;
+  --brand-pink: #ef2dcc;
+  --brand-magenta: #cf00da;
+  --brand-violet: #765cf0;
+  --brand-blue: #1673f2;
+  --brand-cyan: #14c8f2;
+  --brand-gradient: linear-gradient(115deg, var(--brand-pink) 0%, var(--brand-violet) 48%, var(--brand-blue) 75%, var(--brand-cyan) 100%);
   --success-bg: #e8ffea;
   --success: #16865f;
   --danger: #c13f3f;
@@ -785,19 +791,20 @@ p,li,figcaption { text-wrap: pretty; }
 }
 
 /* 2026 editorial homepage refresh: calm, content-first institutional design. */
-.official-brand-mark { width: 44px; height: 44px; flex: 0 0 44px; overflow: visible; border: 0; border-radius: 12px; background: transparent; box-shadow: none; }
-.official-brand-mark svg,.footer-official-logo svg { display: block; width: 100%; height: 100%; }
-.footer-official-logo { overflow: visible; border: 0; border-radius: 14px; background: transparent; }
+.official-brand-mark { width: 60px; height: 48px; flex: 0 0 60px; overflow: hidden; border: 0; background: #fff; }
+.official-brand-mark img,.footer-official-logo img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.42); }
+.footer-official-logo { width: 66px; height: 56px; overflow: hidden; border: 0; border-radius: 8px; background: #fff; }
 
-.reference-hero { overflow: hidden; border-bottom: 1px solid #dde3ea; background: #f6f7f9; }
+.reference-hero { overflow: hidden; border-bottom: 1px solid #dde3ea; background: radial-gradient(circle at 5% 18%, rgba(239,45,204,.055), transparent 28%), radial-gradient(circle at 92% 12%, rgba(22,115,242,.07), transparent 30%), #f6f7f9; }
 .reference-hero-grid { display: grid; min-height: 620px; grid-template-columns: minmax(0,1.02fr) minmax(460px,.98fr); gap: 72px; align-items: stretch; }
 .reference-hero-copy { display: flex; min-width: 0; flex-direction: column; justify-content: center; padding: 82px 0; }
-.reference-overline { color: #245da6; font-size: 11px; font-weight: 850; letter-spacing: .14em; }
+.reference-overline { width: fit-content; background: var(--brand-gradient); background-clip: text; color: transparent; font-size: 11px; font-weight: 900; letter-spacing: .14em; -webkit-background-clip: text; }
 .reference-hero-copy h1 { margin: 22px 0 26px; color: #142237; font-size: clamp(48px,4.9vw,68px); font-weight: 780; line-height: 1.18; letter-spacing: -.055em; }
-.reference-hero-copy h1 em { color: #245da6; font-style: normal; }
+.reference-hero-copy h1 em { background: var(--brand-gradient); background-clip: text; color: transparent; font-style: normal; -webkit-background-clip: text; }
 .reference-hero-copy>p { max-width: 590px; color: #536174; font-size: 17px; line-height: 1.82; }
 .reference-hero-copy .button-row { margin-top: 32px; }
-.reference-hero-copy .btn-primary { border-color: #173f70; background: #173f70; }
+.reference-hero-copy .btn-primary { border-color: transparent; background: var(--brand-gradient); box-shadow: 0 12px 30px rgba(76,77,218,.18); }
+.reference-hero-copy .btn-primary:hover { filter: saturate(1.08) brightness(.96); }
 .reference-hero-copy .btn-secondary { border-color: #aab5c2; background: transparent; color: #1d2d42; }
 .reference-proof { display: grid; max-width: 610px; grid-template-columns: repeat(3,1fr); margin-top: 48px; padding-top: 23px; border-top: 1px solid #cfd6df; }
 .reference-proof>div { padding-right: 20px; }
@@ -808,8 +815,8 @@ p,li,figcaption { text-wrap: pretty; }
 .reference-portrait-stage::before,.reference-portrait-stage::after { content: none; }
 .reference-director-photo { position: absolute; z-index: 2; right: -3%; bottom: 0; width: 92%; height: 100%; filter: drop-shadow(0 18px 18px rgba(24,46,74,.08)); }
 .reference-director-photo img { object-fit: contain; object-position: right bottom; }
-.reference-director-info { position: absolute; z-index: 4; bottom: 28px; left: 0; display: flex; min-width: 310px; flex-direction: column; padding: 14px 18px; border-left: 3px solid #245da6; background: rgba(246,247,249,.92); box-shadow: none; }
-.reference-director-info span { color: #245da6; font-size: 9px; font-weight: 850; letter-spacing: .12em; }
+.reference-director-info { position: absolute; z-index: 4; bottom: 28px; left: 0; display: flex; min-width: 310px; flex-direction: column; padding: 14px 18px; border-left: 3px solid transparent; border-image: var(--brand-gradient) 1; background: rgba(246,247,249,.92); box-shadow: none; }
+.reference-director-info span { color: var(--brand-blue); font-size: 9px; font-weight: 850; letter-spacing: .12em; }
 .reference-director-info strong { margin-top: 8px; color: #142237; font-size: 24px; letter-spacing: -.04em; }
 .reference-director-info small { margin-top: 5px; color: #667487; font-size: 11px; }
 
@@ -817,8 +824,8 @@ p,li,figcaption { text-wrap: pretty; }
 .reference-quick-nav>.container { display: grid; grid-template-columns: repeat(4,1fr); }
 .reference-quick-nav a { display: grid; min-width: 0; min-height: 104px; grid-template-columns: 28px minmax(0,1fr) 18px; gap: 12px; align-items: center; padding: 20px 24px; border-left: 1px solid #e2e6eb; color: #1f2e42; transition: background .18s ease,color .18s ease; }
 .reference-quick-nav a:last-child { border-right: 1px solid #e2e6eb; }
-.reference-quick-nav a:hover { background: #f3f6f9; color: #245da6; }
-.reference-quick-nav a>span { align-self: start; padding-top: 3px; color: #245da6; font-size: 10px; font-weight: 850; }
+.reference-quick-nav a:hover { background: linear-gradient(135deg, rgba(239,45,204,.04), rgba(22,115,242,.06)); color: var(--brand-blue); }
+.reference-quick-nav a>span { align-self: start; padding-top: 3px; background: var(--brand-gradient); background-clip: text; color: transparent; font-size: 10px; font-weight: 900; -webkit-background-clip: text; }
 .reference-quick-nav a>div { display: flex; min-width: 0; flex-direction: column; }
 .reference-quick-nav strong { font-size: 15px; letter-spacing: -.025em; }
 .reference-quick-nav small { margin-top: 6px; color: #718093; font-size: 11px; }
@@ -855,7 +862,7 @@ p,li,figcaption { text-wrap: pretty; }
   .reference-latest-empty { grid-column: 2; }
 }
 @media (max-width: 600px) {
-  .official-brand-mark { width: 40px; height: 40px; flex-basis: 40px; }
+  .official-brand-mark { width: 52px; height: 42px; flex-basis: 52px; }
   .reference-hero-copy { padding: 52px 0 44px; }
   .reference-overline { font-size: 9px; }
   .reference-hero-copy h1 { margin-block: 18px 22px; font-size: clamp(37px,10.5vw,43px); line-height: 1.22; }
@@ -901,3 +908,22 @@ p,li,figcaption { text-wrap: pretty; }
   .replay-support-fields,.support-summary,.replay-support-admin-detail { grid-template-columns: 1fr; }
   .support-account-panel { padding: 18px; }
 }
+
+/* Official AI-cross identity: use the logo palette as a restrained site-wide signal. */
+:root {
+  --kr-blue: var(--brand-blue);
+  --kr-blue-dark: #173f78;
+  --kr-blue-pale: #edf4ff;
+}
+.notice-strip { position: relative; background: linear-gradient(100deg,#21183c 0%,#152853 48%,#0c456c 100%); }
+.notice-strip::after { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; background: var(--brand-gradient); content: ""; }
+.notice-strip span { color: #ff9ee9; }
+.btn-primary,.nav-cta { border-color: transparent; background: var(--brand-gradient); box-shadow: 0 10px 24px rgba(73,72,213,.16); }
+.btn-primary:hover,.nav-cta:hover { background: var(--brand-gradient); color: #fff; filter: saturate(1.08) brightness(.94); }
+.institutional-nav .nav-group.active>a::after { background: var(--brand-gradient); }
+.portal-section-head .eyebrow,.featured-research-copy>span,.research-index>a>span,.home-platform-grid>a>span { width: fit-content; background: var(--brand-gradient); background-clip: text; color: transparent; -webkit-background-clip: text; }
+.research-index { border-top-color: var(--brand-violet); }
+.program-desk { background: radial-gradient(circle at 90% 0,rgba(20,200,242,.12),transparent 32%), radial-gradient(circle at 8% 100%,rgba(239,45,204,.1),transparent 28%), #101d38; }
+.portal-contact { background: linear-gradient(115deg,#6b35ce 0%,#345bd8 50%,#087fca 100%); }
+.site-footer { position: relative; border-top: 4px solid transparent; border-image: var(--brand-gradient) 1; background: #0c1220; }
+.text-link:hover,.reference-latest-more:hover { color: var(--brand-blue); }
