@@ -22,6 +22,7 @@ const fieldToDatabase: Record<string, string> = {
   noticePlacement: 'notice_placement', startsAt: 'starts_at', endsAt: 'ends_at', ctaLabel: 'cta_label', ctaUrl: 'cta_url',
   accessUrl: 'access_url', priceLabel: 'price_label', thumbnailUrl: 'thumbnail_url', videoUrl: 'video_url',
   partnerType: 'partner_type', replayId: 'replay_id', replayTitle: 'replay_title',
+  depositorName: 'depositor_name', supportAmount: 'support_amount', paymentStatus: 'payment_status',
 };
 
 const fieldFromDatabase = Object.fromEntries(
@@ -72,12 +73,13 @@ export function subscribeRecords<T extends StoredRecord>(
   seed: T[],
   listener: (records: T[]) => void,
   publishedOnly = false,
+  selectedFields = '*',
 ) {
   const supabaseClient = supabase;
   if (supabaseClient && !isLocalDemo()) {
     let active = true;
     const fetchRecords = async () => {
-      let source = supabaseClient.from(name).select('*');
+      let source = supabaseClient.from(name).select(selectedFields);
       if (publishedOnly && ['contents', 'gpts', 'apps', 'replays'].includes(name)) source = source.eq('status', 'published');
       const { data, error } = await source.order('created_at', { ascending: false });
       if (!active) return;
@@ -85,7 +87,7 @@ export function subscribeRecords<T extends StoredRecord>(
         listener(localRead(name, seed));
         return;
       }
-      const records = (data ?? []).map((record) => fromDatabase<T>(record));
+      const records = ((data ?? []) as unknown as Record<string, unknown>[]).map((record) => fromDatabase<T>(record));
       listener(records.length ? records : seed);
     };
 

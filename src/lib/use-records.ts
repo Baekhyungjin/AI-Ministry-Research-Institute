@@ -3,14 +3,14 @@
 import { useEffect, useState } from 'react';
 import { CollectionName, StoredRecord, subscribeRecords } from './repository';
 
-export function useRecords<T extends StoredRecord>(name: CollectionName, seed: T[], publishedOnly = false) {
+export function useRecords<T extends StoredRecord>(name: CollectionName, seed: T[], publishedOnly = false, selectedFields = '*') {
   const [records, setRecords] = useState<T[]>(seed);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => subscribeRecords(name, seed, (next) => {
     setRecords(next);
     setLoading(false);
-  }, publishedOnly), [name, seed, publishedOnly]);
+  }, publishedOnly, selectedFields), [name, seed, publishedOnly, selectedFields]);
 
   return { records, loading };
 }

@@ -5,6 +5,7 @@ export type ApplicationStatus = 'new' | 'contacted' | 'confirmed' | 'closed';
 export type ApplicationKind = 'inquiry' | 'lecture' | 'schedule';
 export type ResourceStatus = 'draft' | 'published';
 export type GptPlan = 'free' | 'paid';
+export type ReplayPaymentStatus = 'pending' | 'confirmed' | 'cancelled';
 
 export interface ContentItem {
   id: string;
@@ -101,6 +102,9 @@ export interface ReplayAccessItem {
   church: string;
   phone: string;
   email: string;
+  depositorName: string;
+  supportAmount: number;
+  paymentStatus: ReplayPaymentStatus;
   consent: boolean;
   createdAt: string;
 }

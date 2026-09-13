@@ -73,6 +73,7 @@ export const seedReplayAccesses: ReplayAccessItem[] = [
   {
     id: 'example-replay-access', replayId: 'example-replay', replayTitle: '[예시] 목회AI 온라인 세미나 다시보기',
     name: '예시 시청자', church: '예시교회', phone: '010-0000-0000', email: 'viewer@example.com',
+    depositorName: '예시 시청자', supportAmount: 10000, paymentStatus: 'pending',
     consent: true, createdAt: '2026-09-13T06:00:00.000Z',
   },
 ];
