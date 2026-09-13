@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import BrandSymbol from '@/components/BrandSymbol';
 import { seedContents, seedSchedules } from '@/lib/seed-data';
 import { ContentItem, ScheduleItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -46,8 +45,6 @@ export default function HomeContent() {
             <dl className="reference-proof"><div><dt>RESEARCH</dt><dd>현장 중심 연구</dd></div><div><dt>EDUCATION</dt><dd>목회자 실습 교육</dd></div><div><dt>TOOLS</dt><dd>교회 맞춤형 도구</dd></div></dl>
           </div>
           <div className="reference-portrait-stage" aria-label="백형진 목회AI연구소 소장">
-            <span className="reference-stage-line" aria-hidden="true" />
-            <div className="reference-stage-symbol" aria-hidden="true"><BrandSymbol /></div>
             <div className="reference-director-photo"><Image src="/images/about/director-baekhyungjin.png" alt="백형진 목회AI연구소 소장" fill priority sizes="(max-width: 840px) 90vw, 520px" /></div>
             <div className="reference-director-info"><span>DIRECTOR · FIELD RESEARCHER</span><strong>백형진 소장</strong><small>안양선민교회 목회 현장에서 연구합니다.</small></div>
           </div>

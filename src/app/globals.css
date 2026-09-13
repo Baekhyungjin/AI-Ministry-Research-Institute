@@ -804,14 +804,11 @@ p,li,figcaption { text-wrap: pretty; }
 .reference-proof dt { color: #1c2c43; font-size: 12px; font-weight: 850; letter-spacing: .06em; }
 .reference-proof dd { margin: 5px 0 0; color: #798492; font-size: 11px; }
 
-.reference-portrait-stage { position: relative; min-height: 620px; overflow: hidden; background: #e7edf4; isolation: isolate; }
-.reference-portrait-stage::before { position: absolute; z-index: -3; inset: 0; background: linear-gradient(145deg,#eef3f7 0%,#d9e3ee 58%,#c8d6e5 100%); content: ""; }
-.reference-portrait-stage::after { position: absolute; z-index: -2; right: -20%; bottom: -30%; width: 88%; aspect-ratio: 1; border: 96px solid rgba(35,87,143,.09); border-radius: 50%; content: ""; }
-.reference-stage-line { position: absolute; z-index: 1; top: 0; left: 28px; width: 1px; height: 112px; background: #245da6; }
-.reference-stage-symbol { position: absolute; z-index: 3; top: 36px; right: 36px; width: 58px; height: 58px; }
-.reference-director-photo { position: absolute; z-index: 2; right: -5%; bottom: 0; width: 83%; height: 94%; }
+.reference-portrait-stage { position: relative; min-height: 620px; overflow: hidden; background: transparent; }
+.reference-portrait-stage::before,.reference-portrait-stage::after { content: none; }
+.reference-director-photo { position: absolute; z-index: 2; right: -3%; bottom: 0; width: 92%; height: 100%; filter: drop-shadow(0 18px 18px rgba(24,46,74,.08)); }
 .reference-director-photo img { object-fit: contain; object-position: right bottom; }
-.reference-director-info { position: absolute; z-index: 4; bottom: 34px; left: 28px; display: flex; min-width: 310px; flex-direction: column; padding: 18px 20px; border-left: 4px solid #245da6; background: rgba(255,255,255,.96); box-shadow: 0 14px 36px rgba(24,46,74,.12); }
+.reference-director-info { position: absolute; z-index: 4; bottom: 28px; left: 0; display: flex; min-width: 310px; flex-direction: column; padding: 14px 18px; border-left: 3px solid #245da6; background: rgba(246,247,249,.92); box-shadow: none; }
 .reference-director-info span { color: #245da6; font-size: 9px; font-weight: 850; letter-spacing: .12em; }
 .reference-director-info strong { margin-top: 8px; color: #142237; font-size: 24px; letter-spacing: -.04em; }
 .reference-director-info small { margin-top: 5px; color: #667487; font-size: 11px; }
@@ -849,7 +846,7 @@ p,li,figcaption { text-wrap: pretty; }
   .reference-hero-copy { padding: 62px 0 52px; }
   .reference-hero-copy h1 { font-size: 48px; }
   .reference-portrait-stage { min-height: 500px; }
-  .reference-director-photo { right: -2%; width: 72%; height: 96%; }
+  .reference-director-photo { right: -4%; width: 80%; height: 98%; }
   .reference-quick-nav>.container { grid-template-columns: 1fr 1fr; }
   .reference-quick-nav a:nth-child(n+3) { border-top: 1px solid #e2e6eb; }
   .reference-quick-nav a:nth-child(2) { border-right: 1px solid #e2e6eb; }
@@ -870,10 +867,8 @@ p,li,figcaption { text-wrap: pretty; }
   .reference-proof dt { font-size: 10px; }
   .reference-proof dd { font-size: 9px; }
   .reference-portrait-stage { min-height: 430px; }
-  .reference-stage-line { left: 16px; height: 78px; }
-  .reference-stage-symbol { top: 20px; right: 20px; width: 48px; height: 48px; }
-  .reference-director-photo { right: -11%; width: 100%; height: 96%; }
-  .reference-director-info { right: 14px; bottom: 14px; left: 14px; min-width: 0; padding: 14px 16px; }
+  .reference-director-photo { right: -14%; width: 106%; height: 98%; }
+  .reference-director-info { right: 14px; bottom: 14px; left: 14px; min-width: 0; padding: 13px 15px; background: rgba(246,247,249,.94); }
   .reference-director-info strong { font-size: 21px; }
   .reference-quick-nav>.container { grid-template-columns: 1fr; }
   .reference-quick-nav a { min-height: 78px; padding: 14px 16px; border-top: 1px solid #e2e6eb; border-right: 1px solid #e2e6eb; }
