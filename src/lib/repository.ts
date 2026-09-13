@@ -19,6 +19,7 @@ const fieldToDatabase: Record<string, string> = {
   createdAt: 'created_at',
   scheduleId: 'schedule_id',
   scheduleTitle: 'schedule_title',
+  requestedDate: 'requested_date',
   noticePlacement: 'notice_placement', startsAt: 'starts_at', endsAt: 'ends_at', ctaLabel: 'cta_label', ctaUrl: 'cta_url',
   accessUrl: 'access_url', priceLabel: 'price_label', thumbnailUrl: 'thumbnail_url', videoUrl: 'video_url',
   partnerType: 'partner_type', replayId: 'replay_id', replayTitle: 'replay_title',
@@ -78,17 +79,23 @@ export function subscribeRecords<T extends StoredRecord>(
   const supabaseClient = supabase;
   if (supabaseClient && !isLocalDemo()) {
     let active = true;
+    listener(localRead(name, seed));
     const fetchRecords = async () => {
-      let source = supabaseClient.from(name).select(selectedFields);
-      if (publishedOnly && ['contents', 'gpts', 'apps', 'replays'].includes(name)) source = source.eq('status', 'published');
-      const { data, error } = await source.order('created_at', { ascending: false });
-      if (!active) return;
-      if (error) {
+      try {
+        let source = supabaseClient.from(name).select(selectedFields);
+        if (publishedOnly && ['contents', 'gpts', 'apps', 'replays'].includes(name)) source = source.eq('status', 'published');
+        const { data, error } = await source.order('created_at', { ascending: false });
+        if (!active) return;
+        if (error) {
+          listener(localRead(name, seed));
+          return;
+        }
+        const records = ((data ?? []) as unknown as Record<string, unknown>[]).map((record) => fromDatabase<T>(record));
+        listener(records.length ? records : seed);
+      } catch {
+        if (!active) return;
         listener(localRead(name, seed));
-        return;
       }
-      const records = ((data ?? []) as unknown as Record<string, unknown>[]).map((record) => fromDatabase<T>(record));
-      listener(records.length ? records : seed);
     };
 
     void fetchRecords();

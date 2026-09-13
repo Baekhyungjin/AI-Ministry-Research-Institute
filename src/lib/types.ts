@@ -120,6 +120,7 @@ export interface ApplicationItem {
   message: string;
   scheduleId?: string;
   scheduleTitle?: string;
+  requestedDate?: string;
   status: ApplicationStatus;
   consent: boolean;
   createdAt: string;

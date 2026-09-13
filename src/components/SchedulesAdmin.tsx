@@ -52,7 +52,7 @@ export default function SchedulesAdmin() {
   }
 
   return <div>
-    <header className="admin-page-header"><div><span>CALENDAR</span><h1>일정 관리</h1><p>강의와 세미나를 등록하고 수정·마감·삭제할 수 있습니다.</p></div></header>
+    <header className="admin-page-header"><div><span>CALENDAR</span><h1>일정 관리</h1><p>강의·세미나뿐 아니라 이미 확정된 외부 일정도 등록해 주세요. 등록된 날짜는 공개 달력에서 자동으로 예약 불가로 표시됩니다.</p></div></header>
     <div className="admin-two-column">
       <form className="admin-form admin-panel" onSubmit={submit} key={editing?.id ?? 'new-schedule'}>
         <div className="panel-heading"><div><span>{editing ? 'EDIT SCHEDULE' : 'NEW SCHEDULE'}</span><h2>{editing ? '일정 수정' : '새 일정 등록'}</h2></div>{editing && <button type="button" className="admin-text-button" onClick={resetEditor}>수정 취소</button>}</div>

@@ -2,6 +2,7 @@
 
 import { randomUUID } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
+import { sendAdminNotification } from '@/lib/notification-email';
 
 const MINIMUM_SUPPORT_AMOUNT = 10_000;
 
@@ -77,5 +78,14 @@ export async function submitReplaySupport(input: ReplaySupportInput): Promise<Re
   });
 
   if (error) return { ok: false, message: '신청을 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.' };
+  await sendAdminNotification({
+    subject: `[목회AI연구소] 세미나 다시보기 후원 신청 - ${name}`,
+    replyTo: email,
+    fields: [
+      { label: '세미나', value: replay.title }, { label: '성함', value: name }, { label: '교회·기관', value: church },
+      { label: '연락처', value: phone }, { label: '이메일', value: email }, { label: '입금자명', value: depositorName },
+      { label: '후원 금액', value: `${supportAmount.toLocaleString('ko-KR')}원` },
+    ],
+  });
   return { ok: true, account, replayTitle: replay.title, depositorName, supportAmount };
 }
