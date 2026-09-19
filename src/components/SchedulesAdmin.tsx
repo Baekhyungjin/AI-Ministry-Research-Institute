@@ -81,15 +81,16 @@ export default function SchedulesAdmin() {
         <div className="panel-heading"><div><span>{editing ? 'EDIT SCHEDULE' : 'NEW SCHEDULE'}</span><h2>{editing ? '일정 수정' : '새 일정 등록'}</h2></div>{editing && <button type="button" className="admin-text-button" onClick={resetEditor}>수정 취소</button>}</div>
         <label>일정명<input name="title" defaultValue={editing?.title ?? ''} required /></label>
         <label>프로그램 유형<input name="category" defaultValue={editing?.category ?? ''} placeholder="예: 오프라인 강의" required /></label>
+        <label className="content-image-field schedule-image-field">
+          <span className="schedule-image-field-title">대표 이미지 업로드 <b>선택</b></span>
+          <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" />
+          <small>새 등록과 수정 모두 가능합니다. JPG, PNG, WEBP, GIF · 최대 5MB · 가로형 이미지 권장</small>
+        </label>
+        {editing?.imageUrl && <div className="content-image-preview resource-image-preview"><div><Image src={editing.imageUrl} alt={`${editing.title} 현재 대표 이미지`} fill sizes="420px" unoptimized={editing.imageUrl.startsWith('data:')} /></div><label className="consent-row"><input type="checkbox" name="removeImage" /><span>현재 이미지 제거</span></label></div>}
         <div className="form-grid"><label>날짜<input type="date" name="date" defaultValue={editing?.date ?? ''} required /></label><label>시간<input name="time" defaultValue={editing?.time ?? ''} placeholder="14:00–17:00" required /></label></div>
         <label>장소<input name="location" defaultValue={editing?.location ?? ''} required /></label>
         <div className="form-grid"><label>정원<input type="number" name="capacity" min="1" defaultValue={editing?.capacity ?? 20} required /></label><label>신청 상태<select name="status" defaultValue={editing?.status ?? 'open'}><option value="open">신청 가능</option><option value="closed">마감</option></select></label></div>
         <label>설명<textarea name="description" rows={5} defaultValue={editing?.description ?? ''} required /></label>
-        <label className="content-image-field">대표 이미지
-          <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" />
-          <small>JPG, PNG, WEBP, GIF · 최대 5MB · 가로형 이미지 권장</small>
-        </label>
-        {editing?.imageUrl && <div className="content-image-preview resource-image-preview"><div><Image src={editing.imageUrl} alt={`${editing.title} 현재 대표 이미지`} fill sizes="420px" unoptimized={editing.imageUrl.startsWith('data:')} /></div><label className="consent-row"><input type="checkbox" name="removeImage" /><span>현재 이미지 제거</span></label></div>}
         {message && <div className="form-success" role="status">{message}</div>}
         <button className="btn btn-primary" disabled={saving}>{saving ? '저장 중…' : editing ? '변경 내용 저장' : '일정 등록하기'}</button>
       </form>
