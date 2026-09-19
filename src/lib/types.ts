@@ -48,6 +48,7 @@ export interface ScheduleItem {
   capacityReached?: boolean;
   status: ScheduleStatus;
   description: string;
+  imageUrl?: string | null;
   createdAt: string;
 }
 

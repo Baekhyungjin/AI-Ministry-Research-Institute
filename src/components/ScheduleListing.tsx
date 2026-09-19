@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { seedSchedules } from '@/lib/seed-data';
 import { ScheduleItem } from '@/lib/types';
@@ -18,7 +19,10 @@ export default function ScheduleListing() {
         const isOpen = item.status === 'open' && !isPast;
         return (
         <article className={`event-card event-tone-${(index % 3) + 1}`} key={item.id}>
-          <div className="event-date"><strong>{item.date.slice(8, 10)}</strong><span>{item.date.slice(5, 7)}월 · {item.date.slice(0, 4)}</span></div>
+          <div className={`event-visual ${item.imageUrl ? 'has-image' : ''}`}>
+            {item.imageUrl && <Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} fill sizes="(max-width: 767px) 100vw, 280px" unoptimized={item.imageUrl.startsWith('data:')} />}
+            <div className="event-date"><strong>{item.date.slice(8, 10)}</strong><span>{item.date.slice(5, 7)}월 · {item.date.slice(0, 4)}</span></div>
+          </div>
           <div className="event-body">
             <div className="content-meta"><span>{item.category}</span><b className={`badge ${isOpen ? 'badge-success' : ''}`}>{isOpen ? '신청 가능' : isPast ? '지난 일정' : '마감'}</b></div>
             <h2>{item.title}</h2><p>{item.description}</p>

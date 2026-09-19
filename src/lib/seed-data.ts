@@ -32,7 +32,8 @@ export const seedSchedules: ScheduleItem[] = [
   {
     id: 'schedule-2026-09-15-campus-mission', title: '캠퍼스 선교의 미래를 꿈꾼다', category: '온라인 세미나',
     date: '2026-09-15', time: '20:00–22:00', location: 'Zoom 온라인', capacity: 100, status: 'open',
-    description: '다음 세대를 위한 오늘의 헌신이 더 큰 내일을 만드는 캠퍼스 선교 세미나입니다.', createdAt: '2026-09-01T09:00:00.000Z',
+    description: '다음 세대를 위한 오늘의 헌신이 더 큰 내일을 만드는 캠퍼스 선교 세미나입니다.',
+    imageUrl: '/images/schedule/seminar-campus-mission-horizontal.png', createdAt: '2026-09-01T09:00:00.000Z',
   },
 ];
 
