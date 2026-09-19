@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: item.title,
     description: item.excerpt,
     alternates: { canonical: `/columns/${item.id}` },
-    openGraph: { title: item.title, description: item.excerpt, images: item.imageUrl ? [item.imageUrl] : ['/opengraph-image.png'] },
+    openGraph: { title: item.title, description: item.excerpt, images: item.imageUrl ? [item.imageUrl] : ['/images/brand/ministry-ai-social-preview-v1.png'] },
   };
 }
 

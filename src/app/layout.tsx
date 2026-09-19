@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: {
     title: '목회AI연구소',
     description: '기술보다 사람을, 도구보다 사명을 먼저 생각하는 AI 목회 연구 플랫폼입니다.',
-    images: ['/opengraph-image.png'],
+    url: '/',
+    siteName: '목회AI연구소',
+    images: [{
+      url: '/images/brand/ministry-ai-social-preview-v1.png',
+      width: 1200,
+      height: 630,
+      alt: '목회AI연구소 — 기술보다 사람을, 도구보다 사명을 먼저',
+    }],
     locale: 'ko_KR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '목회AI연구소',
+    description: '기술보다 사람을, 도구보다 사명을 먼저 생각하는 AI 목회 연구 플랫폼입니다.',
+    images: ['/images/brand/ministry-ai-social-preview-v1.png'],
   },
 };
 
