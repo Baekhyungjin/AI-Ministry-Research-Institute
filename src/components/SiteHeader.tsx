@@ -38,6 +38,21 @@ export default function SiteHeader() {
   useEffect(() => {
     queueMicrotask(() => setNow(Date.now()));
   }, []);
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [open]);
   const latestNotice = contents
     .filter((item) => item.kind === 'notice' && item.status === 'published' && now !== null && (!item.startsAt || new Date(item.startsAt).getTime() <= now) && (!item.endsAt || new Date(item.endsAt).getTime() >= now))
     .sort((a,b) => (b.priority || 0) - (a.priority || 0) || b.publishedAt.localeCompare(a.publishedAt))
@@ -49,8 +64,8 @@ export default function SiteHeader() {
       <div className="notice-strip"><div className="container"><span>연구소 소식</span><p>{latestNotice?.title ?? '목회AI연구소의 새로운 소식을 확인하세요.'}</p><Link href={latestNotice ? `/notices/${latestNotice.id}` : '/notices'}>자세히 보기 →</Link></div></div>
       <header className="site-header institutional-header"><div className="container nav-inner">
         <Link href="/" className="brand institutional-brand" onClick={closeMenu} aria-label="목회AI연구소 홈"><span className="official-brand-mark"><BrandSymbol /></span><span><strong>목회AI연구소</strong><small>MINISTRY AI LAB</small></span></Link>
-        <button className="menu-toggle" type="button" aria-expanded={open} aria-label={open ? '메뉴 닫기' : '메뉴 열기'} onClick={() => setOpen((value) => !value)}><span /><span /></button>
-        <nav className={`main-nav institutional-nav ${open ? 'is-open' : ''}`} aria-label="주요 메뉴">
+        <button className="menu-toggle" type="button" aria-controls="primary-navigation" aria-expanded={open} aria-label={open ? '전체 메뉴 닫기' : '전체 메뉴 열기'} onClick={() => setOpen((value) => !value)}><span /><span /></button>
+        <nav id="primary-navigation" className={`main-nav institutional-nav ${open ? 'is-open' : ''}`} aria-label="주요 메뉴">
           {navigation.map((item) => <div className={`nav-group ${pathname.startsWith(item.href) || item.children?.some((child) => pathname.startsWith(child.href.split('?')[0])) ? 'active' : ''}`} key={item.label}><Link href={item.href} onClick={closeMenu}>{item.label}{item.children && <span aria-hidden="true">⌄</span>}</Link>{item.children && <div className="nav-dropdown">{item.children.map((child) => <Link href={child.href} onClick={closeMenu} key={child.href}><strong>{child.label}</strong><small>{child.description}</small></Link>)}</div>}</div>)}
           <Link href="/admin" className="nav-admin" onClick={closeMenu}>관리자</Link>
           <Link href="/replays" className="nav-replay" onClick={closeMenu}>다시보기</Link>
