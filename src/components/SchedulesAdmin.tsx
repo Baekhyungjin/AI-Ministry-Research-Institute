@@ -5,7 +5,7 @@ import { FormEvent, useState } from 'react';
 import { createId, createRecord, deleteRecord, updateRecord } from '@/lib/repository';
 import { seedSchedules } from '@/lib/seed-data';
 import { deleteManagedImage, uploadManagedImage } from '@/lib/storage';
-import { ScheduleItem, ScheduleStatus } from '@/lib/types';
+import { ScheduleItem, SchedulePaymentType, ScheduleStatus } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
 
 export default function SchedulesAdmin() {
@@ -13,15 +13,18 @@ export default function SchedulesAdmin() {
   const [editing, setEditing] = useState<ScheduleItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [paymentType, setPaymentType] = useState<SchedulePaymentType>('free');
 
   function beginEdit(item: ScheduleItem) {
     setEditing(item);
+    setPaymentType(item.paymentType ?? 'free');
     setMessage('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function resetEditor() {
     setEditing(null);
+    setPaymentType('free');
     setMessage('');
   }
 
@@ -54,7 +57,21 @@ export default function SchedulesAdmin() {
       capacityReached: false,
       description: String(form.get('description')).trim(),
       imageUrl,
+      paymentType: String(form.get('paymentType')) as SchedulePaymentType,
+      feeAmount: Number(form.get('feeAmount') || 0),
+      minimumAmount: Number(form.get('minimumAmount') || 0),
+      chatUrl: String(form.get('chatUrl') || '').trim() || null,
     };
+    if (values.paymentType === 'fixed' && values.feeAmount < 1) {
+      setMessage('정액 세미나는 참가비를 1원 이상 입력해 주세요.');
+      setSaving(false);
+      return;
+    }
+    if (values.paymentType === 'voluntary' && values.minimumAmount < 1) {
+      setMessage('자율후원 세미나는 최소 금액을 1원 이상 입력해 주세요.');
+      setSaving(false);
+      return;
+    }
     try {
       if (editing) {
         await updateRecord<ScheduleItem>('schedules', editing.id, values);
@@ -90,12 +107,20 @@ export default function SchedulesAdmin() {
         <div className="form-grid"><label>날짜<input type="date" name="date" defaultValue={editing?.date ?? ''} required /></label><label>시간<input name="time" defaultValue={editing?.time ?? ''} placeholder="14:00–17:00" required /></label></div>
         <label>장소<input name="location" defaultValue={editing?.location ?? ''} required /></label>
         <div className="form-grid"><label>정원<input type="number" name="capacity" min="1" defaultValue={editing?.capacity ?? 20} required /></label><label>신청 상태<select name="status" defaultValue={editing?.status ?? 'open'}><option value="open">신청 가능</option><option value="closed">마감</option></select></label></div>
+        <fieldset className="schedule-payment-settings">
+          <legend>참가비 설정</legend>
+          <label>결제 방식<select name="paymentType" value={paymentType} onChange={(event) => setPaymentType(event.target.value as SchedulePaymentType)}><option value="free">무료</option><option value="fixed">정액 참가비</option><option value="voluntary">자율후원</option></select></label>
+          {paymentType === 'fixed' && <label>참가비<input type="number" name="feeAmount" min="1" step="1000" defaultValue={editing?.feeAmount ?? 10000} required /><small>신청자는 이 금액으로만 접수합니다.</small></label>}
+          {paymentType === 'voluntary' && <label>최소 후원금액<input type="number" name="minimumAmount" min="1" step="1000" defaultValue={editing?.minimumAmount ?? 1000} required /><small>신청자는 최소 금액 이상에서 후원 금액을 선택합니다.</small></label>}
+          {paymentType !== 'free' && <p>입금 계좌는 신청 완료 후에만 표시되며, 관리자에서 입금 상태를 확인할 수 있습니다.</p>}
+        </fieldset>
+        <label>신청자 단체 채팅방 링크 <small>선택</small><input type="url" name="chatUrl" defaultValue={editing?.chatUrl ?? ''} placeholder="https://invite.kakao.com/..." /><small>입력하면 신청 화면과 접수 완료 화면에 참여 안내가 표시됩니다.</small></label>
         <label>설명<textarea name="description" rows={5} defaultValue={editing?.description ?? ''} required /></label>
         {message && <div className="form-success" role="status">{message}</div>}
         <button className="btn btn-primary" disabled={saving}>{saving ? '저장 중…' : editing ? '변경 내용 저장' : '일정 등록하기'}</button>
       </form>
       <section className="admin-panel schedule-manage"><div className="panel-heading"><div><span>ALL SCHEDULES</span><h2>등록된 일정</h2></div><b>{records.length}</b></div>
-        {[...records].sort((a,b) => a.date.localeCompare(b.date)).map((item) => <article key={item.id}><div className="manage-date"><strong>{item.date.slice(8,10)}</strong><span>{item.date.slice(5,7)}월</span></div><div><div className="schedule-admin-badges"><span className={`publish-state ${item.status === 'open' ? 'published' : 'draft'}`}>{item.status === 'open' ? '신청 가능' : item.capacityReached ? '정원 마감' : '마감'}</span>{item.imageUrl && <span className="image-attached">이미지 포함</span>}</div><h3>{item.title}</h3><p>{item.date} · {item.time}<br />{item.location} · 정원 {item.capacity}명</p><div className="inline-actions"><button type="button" onClick={() => beginEdit(item)}>수정</button><button type="button" onClick={() => item.capacityReached ? beginEdit(item) : void updateRecord<ScheduleItem>('schedules', item.id, { status: item.status === 'open' ? 'closed' : 'open', capacityReached: false })}>{item.status === 'open' ? '신청 마감' : item.capacityReached ? '정원 조정 후 열기' : '다시 열기'}</button><button type="button" className="danger" onClick={() => { if (confirm('이 일정을 삭제할까요?')) void (async () => { await deleteRecord<ScheduleItem>('schedules', item.id); if (item.imageUrl) await deleteManagedImage(item.imageUrl).catch(() => undefined); })(); }}>삭제</button></div></div></article>)}
+        {[...records].sort((a,b) => a.date.localeCompare(b.date)).map((item) => <article key={item.id}><div className="manage-date"><strong>{item.date.slice(8,10)}</strong><span>{item.date.slice(5,7)}월</span></div><div><div className="schedule-admin-badges"><span className={`publish-state ${item.status === 'open' ? 'published' : 'draft'}`}>{item.status === 'open' ? '신청 가능' : item.capacityReached ? '정원 마감' : '마감'}</span>{item.imageUrl && <span className="image-attached">이미지 포함</span>}<span className="image-attached">{item.paymentType === 'fixed' ? `${(item.feeAmount ?? 0).toLocaleString('ko-KR')}원` : item.paymentType === 'voluntary' ? `${(item.minimumAmount ?? 1000).toLocaleString('ko-KR')}원부터` : '무료'}</span></div><h3>{item.title}</h3><p>{item.date} · {item.time}<br />{item.location} · 정원 {item.capacity}명</p><div className="inline-actions"><button type="button" onClick={() => beginEdit(item)}>수정</button><button type="button" onClick={() => item.capacityReached ? beginEdit(item) : void updateRecord<ScheduleItem>('schedules', item.id, { status: item.status === 'open' ? 'closed' : 'open', capacityReached: false })}>{item.status === 'open' ? '신청 마감' : item.capacityReached ? '정원 조정 후 열기' : '다시 열기'}</button><button type="button" className="danger" onClick={() => { if (confirm('이 일정을 삭제할까요?')) void (async () => { await deleteRecord<ScheduleItem>('schedules', item.id); if (item.imageUrl) await deleteManagedImage(item.imageUrl).catch(() => undefined); })(); }}>삭제</button></div></div></article>)}
       </section>
     </div>
   </div>;

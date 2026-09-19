@@ -53,6 +53,7 @@ export default function SiteHeader() {
         <nav className={`main-nav institutional-nav ${open ? 'is-open' : ''}`} aria-label="주요 메뉴">
           {navigation.map((item) => <div className={`nav-group ${pathname.startsWith(item.href) || item.children?.some((child) => pathname.startsWith(child.href.split('?')[0])) ? 'active' : ''}`} key={item.label}><Link href={item.href} onClick={closeMenu}>{item.label}{item.children && <span aria-hidden="true">⌄</span>}</Link>{item.children && <div className="nav-dropdown">{item.children.map((child) => <Link href={child.href} onClick={closeMenu} key={child.href}><strong>{child.label}</strong><small>{child.description}</small></Link>)}</div>}</div>)}
           <Link href="/admin" className="nav-admin" onClick={closeMenu}>관리자</Link>
+          <Link href="/replays" className="nav-replay" onClick={closeMenu}>다시보기</Link>
           <Link href="/apply" className="btn btn-primary nav-cta" onClick={closeMenu}>문의·신청</Link>
         </nav>
       </div></header>

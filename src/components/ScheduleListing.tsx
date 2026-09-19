@@ -26,7 +26,7 @@ export default function ScheduleListing() {
           <div className="event-body">
             <div className="content-meta"><span>{item.category}</span><b className={`badge ${isOpen ? 'badge-success' : ''}`}>{isOpen ? '신청 가능' : isPast ? '지난 일정' : '마감'}</b></div>
             <h2>{item.title}</h2><p>{item.description}</p>
-            <dl><div><dt>시간</dt><dd>{item.time}</dd></div><div><dt>장소</dt><dd>{item.location}</dd></div><div><dt>정원</dt><dd>{item.capacity}명</dd></div></dl>
+            <dl><div><dt>시간</dt><dd>{item.time}</dd></div><div><dt>장소</dt><dd>{item.location}</dd></div><div><dt>정원</dt><dd>{item.capacity}명</dd></div><div><dt>참가비</dt><dd>{item.paymentType === 'fixed' ? `${(item.feeAmount ?? 0).toLocaleString('ko-KR')}원` : item.paymentType === 'voluntary' ? `${(item.minimumAmount ?? 1000).toLocaleString('ko-KR')}원부터 자율후원` : '무료'}</dd></div></dl>
             {isOpen ? <Link href={`/apply?type=schedule&schedule=${item.id}`} className="btn btn-primary">이 일정 신청하기</Link> : <span className="btn btn-disabled">{isPast ? '일정 종료' : '신청 마감'}</span>}
           </div>
         </article>

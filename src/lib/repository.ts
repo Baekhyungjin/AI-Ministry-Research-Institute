@@ -19,6 +19,8 @@ const fieldToDatabase: Record<string, string> = {
   scheduleId: 'schedule_id',
   scheduleTitle: 'schedule_title',
   requestedDate: 'requested_date',
+  paymentType: 'payment_type', feeAmount: 'fee_amount', minimumAmount: 'minimum_amount', chatUrl: 'chat_url',
+  paymentAmount: 'payment_amount', chatJoined: 'chat_joined',
   noticePlacement: 'notice_placement', startsAt: 'starts_at', endsAt: 'ends_at', ctaLabel: 'cta_label', ctaUrl: 'cta_url',
   accessUrl: 'access_url', priceLabel: 'price_label', thumbnailUrl: 'thumbnail_url', videoUrl: 'video_url',
   partnerType: 'partner_type', replayId: 'replay_id', replayTitle: 'replay_title',

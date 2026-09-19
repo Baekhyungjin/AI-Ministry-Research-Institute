@@ -1,6 +1,8 @@
 export type ContentKind = 'column' | 'notice';
 export type PublishStatus = 'draft' | 'published';
 export type ScheduleStatus = 'open' | 'closed';
+export type SchedulePaymentType = 'free' | 'fixed' | 'voluntary';
+export type SchedulePaymentStatus = 'not_required' | 'pending' | 'confirmed' | 'cancelled';
 export type ApplicationStatus = 'new' | 'contacted' | 'confirmed' | 'closed';
 export type ApplicationKind = 'inquiry' | 'lecture' | 'schedule';
 export type ResourceStatus = 'draft' | 'published';
@@ -49,6 +51,10 @@ export interface ScheduleItem {
   status: ScheduleStatus;
   description: string;
   imageUrl?: string | null;
+  paymentType?: SchedulePaymentType;
+  feeAmount?: number;
+  minimumAmount?: number;
+  chatUrl?: string | null;
   createdAt: string;
 }
 
@@ -133,6 +139,10 @@ export interface ApplicationItem {
   scheduleId?: string;
   scheduleTitle?: string;
   requestedDate?: string;
+  depositorName?: string;
+  paymentAmount?: number;
+  paymentStatus?: SchedulePaymentStatus;
+  chatJoined?: boolean;
   status: ApplicationStatus;
   consent: boolean;
   createdAt: string;

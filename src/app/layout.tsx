@@ -3,6 +3,7 @@ import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import AnnouncementPopup from '@/components/AnnouncementPopup';
+import InquiryAssistant from '@/components/InquiryAssistant';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ministry-ai-lab-rho.vercel.app'),
@@ -42,6 +43,7 @@ export default function RootLayout({
         <AnnouncementPopup />
         <main>{children}</main>
         <SiteFooter />
+        <InquiryAssistant />
       </body>
     </html>
   );

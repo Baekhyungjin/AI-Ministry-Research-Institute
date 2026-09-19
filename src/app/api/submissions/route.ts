@@ -81,6 +81,12 @@ export async function POST(request: Request) {
   const scheduleId = clean(payload.scheduleId, 160) || null;
   let scheduleTitle = clean(payload.scheduleTitle, 240) || null;
   const requestedDate = clean(payload.requestedDate, 10) || null;
+  let depositorName: string | null = null;
+  let paymentAmount: number | null = null;
+  let paymentStatus: 'not_required' | 'pending' = 'not_required';
+  let chatJoined = false;
+  let chatUrl: string | null = null;
+  let paymentAccount: string | undefined;
 
   if (kind === 'lecture' && !requestedDate) {
     return NextResponse.json({ ok: false, message: '달력에서 일정이 없는 희망 날짜를 선택해 주세요.' }, { status: 400 });
@@ -96,17 +102,42 @@ export async function POST(request: Request) {
 
   if (kind === 'schedule') {
     if (!scheduleId) return NextResponse.json({ ok: false, message: '신청할 공개 일정을 다시 선택해 주세요.' }, { status: 400 });
-    const { data: schedule, error: scheduleError } = await supabase.from('schedules').select('id,title,date,status').eq('id', scheduleId).maybeSingle();
+    const { data: schedule, error: scheduleError } = await supabase.from('schedules').select('id,title,date,status,payment_type,fee_amount,minimum_amount,chat_url').eq('id', scheduleId).maybeSingle();
     if (scheduleError || !schedule || schedule.status !== 'open' || schedule.date < getKoreanToday()) {
       return NextResponse.json({ ok: false, message: '현재 신청할 수 없는 일정입니다.' }, { status: 409 });
     }
     scheduleTitle = schedule.title;
+    const paymentType = schedule.payment_type === 'fixed' || schedule.payment_type === 'voluntary' ? schedule.payment_type : 'free';
+    chatUrl = clean(schedule.chat_url, 500) || null;
+    chatJoined = payload.chatJoined === true;
+    if (chatUrl && !chatJoined) {
+      return NextResponse.json({ ok: false, message: '세미나 단체 채팅방 안내를 확인해 주세요.' }, { status: 400 });
+    }
+    if (paymentType !== 'free') {
+      depositorName = clean(payload.depositorName, 80) || null;
+      const submittedAmount = Number(payload.paymentAmount);
+      if (!depositorName) return NextResponse.json({ ok: false, message: '입금자명을 입력해 주세요.' }, { status: 400 });
+      if (!Number.isSafeInteger(submittedAmount) || submittedAmount < 1) {
+        return NextResponse.json({ ok: false, message: '참가비 또는 후원 금액을 선택해 주세요.' }, { status: 400 });
+      }
+      if (paymentType === 'fixed' && submittedAmount !== schedule.fee_amount) {
+        return NextResponse.json({ ok: false, message: '등록된 세미나 참가비를 다시 확인해 주세요.' }, { status: 400 });
+      }
+      if (paymentType === 'voluntary' && submittedAmount < schedule.minimum_amount) {
+        return NextResponse.json({ ok: false, message: `후원 금액은 ${schedule.minimum_amount.toLocaleString('ko-KR')}원 이상 선택해 주세요.` }, { status: 400 });
+      }
+      paymentAccount = process.env.REPLAY_SUPPORT_ACCOUNT?.trim();
+      if (!paymentAccount) return NextResponse.json({ ok: false, message: '입금 계좌 설정을 확인하고 있습니다. 잠시 후 다시 신청해 주세요.' }, { status: 503 });
+      paymentAmount = submittedAmount;
+      paymentStatus = 'pending';
+    }
   }
 
   const submissionId = `application-${randomUUID()}`;
   const insertRecord: Record<string, unknown> = {
     id: submissionId, kind, name, church, role, phone, email, message,
     schedule_id: scheduleId, schedule_title: scheduleTitle, requested_date: requestedDate,
+    depositor_name: depositorName, payment_amount: paymentAmount, payment_status: paymentStatus, chat_joined: chatJoined,
     status: 'new', consent: true, created_at: new Date().toISOString(),
   };
   let { error } = await supabase.from('applications').insert(insertRecord);
@@ -133,9 +164,20 @@ export async function POST(request: Request) {
       { label: '접수 구분', value: kindLabel }, { label: '성함', value: name }, { label: '교회·기관', value: church },
       { label: '직분·역할', value: role }, { label: '연락처', value: phone }, { label: '이메일', value: email },
       { label: '희망 날짜', value: requestedDate ?? undefined }, { label: '신청 일정', value: scheduleTitle ?? undefined },
+      { label: '입금자명', value: depositorName ?? undefined },
+      { label: '신청 금액', value: paymentAmount ? `${paymentAmount.toLocaleString('ko-KR')}원` : undefined },
+      { label: '입금 상태', value: paymentStatus === 'pending' ? '입금 대기' : undefined },
+      { label: '단체 채팅방 안내 확인', value: chatUrl ? (chatJoined ? '확인' : '미확인') : undefined },
       { label: '문의 내용', value: message },
     ],
     idempotencyKey: submissionId,
   });
-  return NextResponse.json({ ok: true, notificationSent: notification.sent }, { status: 201 });
+  return NextResponse.json({
+    ok: true,
+    notificationSent: notification.sent,
+    account: paymentAccount,
+    paymentAmount: paymentAmount ?? undefined,
+    depositorName: depositorName ?? undefined,
+    chatUrl: chatUrl ?? undefined,
+  }, { status: 201 });
 }

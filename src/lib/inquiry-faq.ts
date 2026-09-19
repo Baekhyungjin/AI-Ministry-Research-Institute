@@ -1,0 +1,123 @@
+export type InquiryFaq = { category: string; question: string; answer: string; href?: string; linkLabel?: string };
+
+export const inquiryFaqs: InquiryFaq[] = [
+  // 연구소 소개 1-10
+  { category: '연구소', question: '목회AI연구소는 어떤 곳인가요?', answer: '교회 현장에서 시작한 질문을 연구하고 목회자가 바로 활용할 수 있는 AI 교육·도구·콘텐츠로 연결하는 연구소입니다.', href: '/about', linkLabel: '연구소 소개' },
+  { category: '연구소', question: '연구소 소장은 누구인가요?', answer: '백형진 소장이 운영하며 안양선민교회 목회 현장을 기반으로 연구하고 교육합니다.', href: '/about', linkLabel: '소장 소개' },
+  { category: '연구소', question: '연구소의 핵심 철학은 무엇인가요?', answer: '기술보다 사람을, 도구보다 사명을 먼저 생각하며 AI가 목회를 대신하지 않고 돕도록 하는 것입니다.' },
+  { category: '연구소', question: '연구소는 교회인가요 회사인가요?', answer: '목회 현장을 기반으로 AI 활용을 연구·교육하고 도구를 개발하는 전문 연구·교육 플랫폼입니다.' },
+  { category: '연구소', question: '어떤 분야를 연구하나요?', answer: '설교와 성경 연구, 교회 행정, 콘텐츠 제작, 목회용 앱, AI 윤리와 현장 적용을 연구합니다.', href: '/columns', linkLabel: '연구 콘텐츠' },
+  { category: '연구소', question: '연구 결과는 어디에서 볼 수 있나요?', answer: '홈페이지의 연구·콘텐츠 메뉴에서 칼럼, 인사이트, 프롬프트와 자료를 볼 수 있습니다.', href: '/columns', linkLabel: '연구 결과 보기' },
+  { category: '연구소', question: '연구소와 협력할 수 있나요?', answer: '교회·기관·개인 모두 협력할 수 있습니다. 문의 또는 파트너 신청서를 남겨 주세요.', href: '/partners', linkLabel: '파트너 신청' },
+  { category: '연구소', question: '연구소 연락처는 어디에 있나요?', answer: '문의·신청 페이지에 내용을 남기거나 연구소 오픈채팅을 이용할 수 있습니다.', href: '/apply', linkLabel: '문의하기' },
+  { category: '연구소', question: '백형진 소장 명함을 받을 수 있나요?', answer: '디지털 명함 페이지에서 연락처와 명함 이미지를 내려받을 수 있습니다.', href: '/card', linkLabel: '명함 보기' },
+  { category: '연구소', question: '목회자가 아니어도 이용할 수 있나요?', answer: '네. 교회 사역자, 교육 담당자, 신학생, 기관 실무자와 목회 AI에 관심 있는 개인도 이용할 수 있습니다.' },
+
+  // 교육·세미나 11-20
+  { category: '교육', question: '예정된 세미나는 어디에서 확인하나요?', answer: '교육 일정 페이지에서 공개 세미나와 신청 가능 여부를 확인할 수 있습니다.', href: '/schedule', linkLabel: '교육 일정' },
+  { category: '교육', question: '세미나는 어떻게 신청하나요?', answer: '교육 일정에서 원하는 세미나의 신청 버튼을 누르고 신청자 정보와 참가 정보를 입력하면 됩니다.', href: '/schedule', linkLabel: '세미나 신청' },
+  { category: '교육', question: '세미나 참가비가 있나요?', answer: '세미나마다 무료·정액·자율후원 방식이 다릅니다. 각 일정 카드와 신청 화면에 금액이 표시됩니다.' },
+  { category: '교육', question: '세미나 참가비는 어떻게 입금하나요?', answer: '유료 세미나는 신청 완료 후 입금 계좌가 표시됩니다. 신청한 금액과 입금자명으로 송금해 주세요.' },
+  { category: '교육', question: '입금 계좌를 미리 볼 수 있나요?', answer: '안전한 운영을 위해 계좌번호는 유료 세미나 신청이 정상 접수된 뒤에만 안내합니다.' },
+  { category: '교육', question: '입금 확인은 언제 되나요?', answer: '관리자가 입금 내역을 확인한 뒤 신청 상태를 변경합니다. 확인이 필요하면 신청자 이름과 입금자명을 알려 주세요.', href: '/apply', linkLabel: '입금 문의' },
+  { category: '교육', question: '세미나 신청을 취소하고 싶어요.', answer: '문의 페이지에 세미나명, 신청자명, 연락처와 취소 요청을 남겨 주세요.', href: '/apply', linkLabel: '취소 요청' },
+  { category: '교육', question: '세미나 정원이 마감되면 신청할 수 없나요?', answer: '정원에 도달하면 신청이 자동 마감됩니다. 추가 모집 여부는 공지사항에서 안내합니다.', href: '/notices', linkLabel: '공지 확인' },
+  { category: '교육', question: '온라인 세미나는 어디에서 참여하나요?', answer: '입금 또는 신청 확인 후 Zoom 링크나 단체 채팅방 등 참여 방법을 연락처 또는 이메일로 안내합니다.' },
+  { category: '교육', question: '세미나 단체 채팅방은 꼭 들어가야 하나요?', answer: '채팅방이 지정된 세미나는 공지와 접속 링크 전달을 위해 입장 안내 확인이 필요할 수 있습니다.' },
+
+  // 다시보기 21-30
+  { category: '다시보기', question: '세미나 다시보기는 어디에 있나요?', answer: '세미나 다시보기 전용 페이지에서 공개된 교육 영상 목록을 확인할 수 있습니다.', href: '/replays', linkLabel: '다시보기 바로가기' },
+  { category: '다시보기', question: '다시보기는 무료인가요?', answer: '현재 다시보기는 10,000원부터 자유롭게 후원한 뒤 입금 확인을 거쳐 이용하는 방식입니다.', href: '/replays', linkLabel: '다시보기 신청' },
+  { category: '다시보기', question: '다시보기 후원금은 얼마인가요?', answer: '최소 10,000원부터 원하는 금액으로 후원할 수 있습니다.' },
+  { category: '다시보기', question: '다시보기 신청 후 바로 볼 수 있나요?', answer: '신청과 입금 확인 후 등록한 이메일 또는 연락처로 시청 링크를 안내합니다.' },
+  { category: '다시보기', question: '다시보기 계좌는 어디에서 확인하나요?', answer: '후원 신청이 정상 접수되면 완료 화면에 입금 계좌가 표시됩니다.', href: '/replays', linkLabel: '후원 신청' },
+  { category: '다시보기', question: '다시보기 링크를 받지 못했어요.', answer: '입금자명과 신청 이메일을 확인한 뒤 문의 페이지로 알려 주세요.', href: '/apply', linkLabel: '링크 문의' },
+  { category: '다시보기', question: '다시보기는 어떻게 신청하나요?', answer: '다시보기 페이지에서 원하는 영상을 선택하고 성함, 연락처, 이메일, 후원 금액과 입금자명을 입력해 신청합니다.', href: '/replays', linkLabel: '다시보기 신청' },
+  { category: '다시보기', question: '다시보기 영상을 다른 사람과 공유해도 되나요?', answer: '시청 링크는 신청자 본인용입니다. 무단 공유·복제·재배포는 허용되지 않습니다.' },
+  { category: '다시보기', question: '여러 세미나를 한꺼번에 구매할 수 있나요?', answer: '현재는 영상별 신청 방식입니다. 묶음 이용이나 단체 이용은 별도로 문의해 주세요.', href: '/apply', linkLabel: '묶음 이용 문의' },
+  { category: '다시보기', question: '교회 단체로 다시보기를 보고 싶어요.', answer: '교회·기관 단체 시청은 인원과 사용 목적을 적어 문의해 주세요. 적합한 이용 방법을 안내합니다.', href: '/apply', linkLabel: '단체 시청 문의' },
+
+  // 강의·컨설팅 31-40
+  { category: '강의', question: '강의를 요청하려면 어떻게 하나요?', answer: '문의·신청에서 강의·컨설팅 요청을 선택하고 희망 날짜와 필요한 교육 내용을 입력해 주세요.', href: '/apply?type=lecture', linkLabel: '강의 요청' },
+  { category: '강의', question: '강의 가능한 날짜는 어디에서 확인하나요?', answer: '교육 일정의 소장 일정 달력에서 일정이 있는 날과 문의 가능한 날을 확인할 수 있습니다.', href: '/schedule', linkLabel: '일정 달력' },
+  { category: '강의', question: '달력의 빈 날짜는 예약 가능한 날인가요?', answer: '빈 날짜는 문의 가능한 날짜이며 확정 예약은 아닙니다. 신청 내용을 확인한 뒤 최종 조율합니다.' },
+  { category: '강의', question: '이미 일정이 있는 날에도 강의를 요청할 수 있나요?', answer: '중복 방지를 위해 일정이 등록된 날짜에는 강의 요청을 받지 않습니다. 다른 날짜를 선택해 주세요.' },
+  { category: '강의', question: '강의 비용은 얼마인가요?', answer: '주제, 시간, 인원, 지역과 준비 범위에 따라 달라집니다. 요청서를 확인한 뒤 안내합니다.', href: '/apply?type=lecture', linkLabel: '견적 문의' },
+  { category: '강의', question: '온라인 강의도 가능한가요?', answer: '네. Zoom 등 온라인 방식과 현장 출강 모두 협의할 수 있습니다.' },
+  { category: '강의', question: '지방 교회에도 출강하나요?', answer: '가능합니다. 지역, 일정, 이동 조건을 신청서에 적어 주세요.' },
+  { category: '강의', question: '어떤 강의 주제가 가능한가요?', answer: '설교·성경 연구, 교회 행정 자동화, 콘텐츠 제작, 생성형 AI 활용, 목회용 앱 제작과 AI 윤리 등을 다룹니다.' },
+  { category: '강의', question: '교회 상황에 맞춘 맞춤 강의가 가능한가요?', answer: '네. 교회 규모와 참석자 수준, 해결하려는 문제를 바탕으로 내용을 구성합니다.' },
+  { category: '강의', question: '강의 요청 후 언제 연락이 오나요?', answer: '신청 내용을 확인한 뒤 입력한 연락처나 이메일로 조율합니다. 급한 일정은 문의 내용에 표시해 주세요.' },
+
+  // GPT·앱 41-50
+  { category: 'GPT·앱', question: '목회용 GPT는 어디에서 볼 수 있나요?', answer: 'GPT·앱 메뉴의 무료·판매 GPT 페이지에서 확인할 수 있습니다.', href: '/gpts', linkLabel: 'GPT 보기' },
+  { category: 'GPT·앱', question: '무료 GPT도 있나요?', answer: '네. 무료 도구와 판매 도구를 구분해 공개합니다.', href: '/gpts', linkLabel: '무료 GPT 보기' },
+  { category: 'GPT·앱', question: '판매 GPT는 어떻게 구매하나요?', answer: '각 도구의 구매·문의 링크를 이용하거나 홈페이지 문의에 도구명을 남겨 주세요.', href: '/gpts', linkLabel: '판매 GPT 보기' },
+  { category: 'GPT·앱', question: 'GPT를 사용하려면 ChatGPT 계정이 필요한가요?', answer: 'ChatGPT에서 제공되는 GPT는 ChatGPT 계정과 해당 서비스의 이용 조건이 필요할 수 있습니다.' },
+  { category: 'GPT·앱', question: '교회 전용 GPT를 제작할 수 있나요?', answer: '네. 교회의 목적과 자료, 업무 흐름을 검토해 맞춤 제작을 상담합니다.', href: '/apply', linkLabel: '맞춤 제작 문의' },
+  { category: 'GPT·앱', question: '연구소 앱은 어디에서 사용하나요?', answer: '연구소 앱 페이지에서 공개된 웹앱을 확인하고 연결된 주소로 이동할 수 있습니다.', href: '/apps', linkLabel: '연구소 앱' },
+  { category: 'GPT·앱', question: '앱 사용료가 있나요?', answer: '앱마다 무료·유료 정책이 다를 수 있습니다. 각 앱 설명과 연결 페이지를 확인해 주세요.' },
+  { category: 'GPT·앱', question: '앱 사용 중 오류가 발생했어요.', answer: '앱 이름, 사용 기기, 오류 화면과 발생 과정을 문의로 보내 주세요.', href: '/apply', linkLabel: '오류 문의' },
+  { category: 'GPT·앱', question: '교회 홈페이지나 앱도 제작하나요?', answer: '네. 필요한 기능과 운영 방식에 따라 홈페이지·웹앱 제작을 상담할 수 있습니다.', href: '/apply', linkLabel: '제작 문의' },
+  { category: 'GPT·앱', question: 'AI 도구 사용법 교육도 받을 수 있나요?', answer: '네. 초급부터 실무 적용까지 교회 상황에 맞춘 교육을 요청할 수 있습니다.', href: '/apply?type=lecture', linkLabel: '교육 요청' },
+
+  // 콘텐츠·자료 51-60
+  { category: '콘텐츠', question: '연구소 칼럼은 어디에서 읽나요?', answer: '연구·콘텐츠 메뉴의 연구소 칼럼에서 읽을 수 있습니다.', href: '/columns', linkLabel: '칼럼 보기' },
+  { category: '콘텐츠', question: '칼럼을 검색할 수 있나요?', answer: '현재 칼럼 목록에서 공개 콘텐츠를 확인할 수 있으며 콘텐츠가 늘어나면 검색·분류 기능을 확장할 예정입니다.', href: '/columns', linkLabel: '칼럼 목록' },
+  { category: '콘텐츠', question: '프롬프트 자료는 무료인가요?', answer: '공개된 프롬프트 자료는 해당 페이지에서 자유롭게 확인할 수 있습니다.', href: '/prompts', linkLabel: '프롬프트 자료' },
+  { category: '콘텐츠', question: '자료를 교회 교육에 사용해도 되나요?', answer: '개별 자료에 별도 안내가 없다면 출처를 표시한 내부 교육 활용은 가능하며 재판매·무단 배포는 허용되지 않습니다.' },
+  { category: '콘텐츠', question: '연구소 자료를 SNS에 공유해도 되나요?', answer: '원문 링크와 출처를 함께 표시해 공유해 주세요. 본문 전체 복제나 이미지 무단 편집은 피해주세요.' },
+  { category: '콘텐츠', question: '자료 아카이브에는 무엇이 있나요?', answer: '매거진, 출판물, 교육 기록과 연구 이미지를 월별·주제별로 모아 둡니다.', href: '/archive', linkLabel: '자료 아카이브' },
+  { category: '콘텐츠', question: '새 글이 올라오면 알림을 받을 수 있나요?', answer: '현재는 공지와 홈페이지에서 새 소식을 확인할 수 있습니다. 별도 구독 기능은 준비 중입니다.', href: '/notices', linkLabel: '새 소식' },
+  { category: '콘텐츠', question: '연구 주제를 제안할 수 있나요?', answer: '네. 현장에서 해결하고 싶은 질문을 일반·협업 문의로 보내 주세요.', href: '/apply?type=inquiry', linkLabel: '연구 주제 제안' },
+  { category: '콘텐츠', question: '칼럼을 기고할 수 있나요?', answer: '목회 AI 현장 사례와 연구 글의 기고·협업을 검토합니다. 주제와 간단한 소개를 보내 주세요.', href: '/apply', linkLabel: '기고 문의' },
+  { category: '콘텐츠', question: '콘텐츠에 나온 내용을 인용해도 되나요?', answer: '통상적인 인용 범위에서 글 제목, 작성자, 목회AI연구소와 원문 링크를 표시해 주세요.' },
+
+  // 파트너 61-70
+  { category: '파트너', question: '파트너 교회란 무엇인가요?', answer: '목회 AI 연구와 교육을 함께 실험하고 현장 피드백을 나누는 협력 교회입니다.', href: '/partners', linkLabel: '파트너 안내' },
+  { category: '파트너', question: '개인도 파트너가 될 수 있나요?', answer: '네. 목회자, 사역자, 개발자, 디자이너, 교육자 등 개인 파트너도 신청할 수 있습니다.', href: '/partners', linkLabel: '개인 파트너 신청' },
+  { category: '파트너', question: '파트너 신청 비용이 있나요?', answer: '비용과 구체적인 운영 조건은 일괄적으로 정하지 않고 신청 목적과 협력 형태를 확인한 뒤 안내합니다.' },
+  { category: '파트너', question: '파트너가 되면 어떤 활동을 하나요?', answer: '연구 주제 제안, 교육 참여, 현장 테스트, 사례 공유와 공동 프로젝트 등을 협의할 수 있습니다.' },
+  { category: '파트너', question: '파트너 신청 후 절차는 어떻게 되나요?', answer: '신청 내용을 검토한 뒤 연락하여 관심 분야와 가능한 협력 방식을 조율합니다.' },
+  { category: '파트너', question: '기관이나 노회도 파트너 신청이 가능한가요?', answer: '네. 교회뿐 아니라 노회, 선교단체, 교육기관과의 협력도 가능합니다.' },
+  { category: '파트너', question: '기술이 없어도 파트너가 될 수 있나요?', answer: '가능합니다. 실제 목회 질문과 현장 경험이 중요한 협력 자원입니다.' },
+  { category: '파트너', question: '파트너 신청 내용을 수정하고 싶어요.', answer: '신청자명과 연락처, 수정 내용을 문의 페이지에 남겨 주세요.', href: '/apply', linkLabel: '수정 요청' },
+  { category: '파트너', question: '파트너 신청을 철회하고 싶어요.', answer: '신청자명과 연락처를 적어 철회 요청을 보내면 확인 후 처리합니다.', href: '/apply', linkLabel: '철회 요청' },
+  { category: '파트너', question: '공동 프로젝트를 제안할 수 있나요?', answer: '네. 목표, 대상, 예상 일정과 필요한 역할을 일반·협업 문의에 적어 주세요.', href: '/apply?type=inquiry', linkLabel: '프로젝트 제안' },
+
+  // 신청·관리 71-80
+  { category: '신청', question: '신청이 정상 접수됐는지 어떻게 알 수 있나요?', answer: '정상 접수되면 화면에 접수 완료 안내가 표시됩니다. 유료 신청은 계좌와 신청 금액도 함께 표시됩니다.' },
+  { category: '신청', question: '신청 완료 메일이 오나요?', answer: '관리자에게는 접수 알림이 전송됩니다. 신청자 자동 회신 기능은 서비스별 안내 방식에 따라 순차적으로 확장합니다.' },
+  { category: '신청', question: '신청할 때 어떤 정보가 필요한가요?', answer: '성함, 소속, 연락처, 이메일과 신청 내용이 기본이며 유료 세미나는 금액과 입금자명이 추가됩니다.' },
+  { category: '신청', question: '신청 정보를 잘못 입력했어요.', answer: '신청자명, 연락처와 바로잡을 내용을 문의 페이지에 남겨 주세요.', href: '/apply', linkLabel: '정보 수정 문의' },
+  { category: '신청', question: '내 신청 내역을 직접 볼 수 있나요?', answer: '현재 신청자용 조회 화면은 제공하지 않습니다. 확인이 필요하면 성함과 연락처로 문의해 주세요.', href: '/apply', linkLabel: '신청 확인' },
+  { category: '신청', question: '관리자는 신청 내용을 어디에서 확인하나요?', answer: '관리자 로그인 후 문의·신청 관리와 파트너·다시보기 신청 메뉴에서 확인합니다.', href: '/login', linkLabel: '관리자 로그인' },
+  { category: '신청', question: '신청 정보는 안전하게 보관되나요?', answer: '신청 데이터는 Supabase에 저장하며 관리자 권한이 있는 계정만 조회·수정할 수 있도록 구성했습니다.', href: '/privacy', linkLabel: '개인정보 처리방침' },
+  { category: '신청', question: '개인정보 삭제를 요청할 수 있나요?', answer: '네. 신청자 확인에 필요한 정보와 삭제 요청을 이메일 또는 문의 페이지로 보내 주세요.', href: '/privacy', linkLabel: '개인정보 안내' },
+  { category: '신청', question: '같은 세미나를 두 번 신청했어요.', answer: '신청자명과 연락처를 알려 주시면 중복 신청을 확인하고 정리합니다.', href: '/apply', linkLabel: '중복 신청 문의' },
+  { category: '신청', question: '휴대전화로도 신청할 수 있나요?', answer: '네. 홈페이지와 신청서는 모바일 화면에 맞춰 사용할 수 있습니다.' },
+
+  // 결제·환불 81-90
+  { category: '결제', question: '카드 결제가 가능한가요?', answer: '현재는 계좌이체 방식입니다. 카드·간편결제는 추후 결제 시스템 도입 시 제공할 예정입니다.' },
+  { category: '결제', question: '현금영수증 발급이 가능한가요?', answer: '현재 결제 성격과 발급 가능 여부를 확인해야 하므로 입금 전에 별도로 문의해 주세요.', href: '/apply', linkLabel: '결제 문의' },
+  { category: '결제', question: '입금자명과 신청자명이 달라도 되나요?', answer: '가능하지만 반드시 신청서에 실제 입금자명을 정확히 입력해야 확인할 수 있습니다.' },
+  { category: '결제', question: '신청 금액과 다르게 입금했어요.', answer: '신청자명, 입금자명, 실제 입금액을 문의로 알려 주세요.', href: '/apply', linkLabel: '입금 정정 문의' },
+  { category: '결제', question: '입금했는데 계속 입금 대기로 보여요.', answer: '관리자가 직접 확인하기 때문에 시간이 걸릴 수 있습니다. 오래 지연되면 입금자명과 시간을 알려 주세요.', href: '/apply', linkLabel: '입금 확인 요청' },
+  { category: '결제', question: '세미나 참가비 환불이 가능한가요?', answer: '세미나 시작 전 취소 시점과 준비 비용에 따라 검토합니다. 세미나명과 결제 정보를 보내 주세요.', href: '/apply', linkLabel: '환불 문의' },
+  { category: '결제', question: '다시보기 후원금을 환불받을 수 있나요?', answer: '시청 링크 제공 전에는 확인 후 처리할 수 있습니다. 링크 제공 후에는 콘텐츠 특성상 제한될 수 있습니다.', href: '/apply', linkLabel: '환불 문의' },
+  { category: '결제', question: '법인이나 교회 이름으로 입금해도 되나요?', answer: '가능합니다. 신청서의 입금자명에 통장에 표시될 이름을 정확히 입력해 주세요.' },
+  { category: '결제', question: '자율후원 금액을 직접 정할 수 있나요?', answer: '세미나 신청 화면에 제시된 최소 금액 이상에서 선택할 수 있습니다. 다시보기는 10,000원 이상입니다.' },
+  { category: '결제', question: '입금 전에도 자리가 확보되나요?', answer: '신청 접수로 정원에는 반영되지만 지정된 기간 안에 입금 확인이 되지 않으면 최종 참여가 제한될 수 있습니다.' },
+
+  // 기술·이용 91-100
+  { category: '이용안내', question: '홈페이지가 휴대전화에서 잘 보이나요?', answer: '모바일·태블릿·PC에 맞춰 반응형으로 구성했습니다. 문제가 있으면 기기와 화면을 알려 주세요.' },
+  { category: '이용안내', question: '로그인이 꼭 필요한가요?', answer: '일반 콘텐츠 열람과 신청에는 로그인이 필요하지 않습니다. 관리자 기능만 로그인이 필요합니다.' },
+  { category: '이용안내', question: '관리자 로그인이 되지 않아요.', answer: '관리자 권한이 등록된 계정인지 확인한 뒤 다시 로그인해 주세요. 계속 실패하면 운영자에게 문의해 주세요.', href: '/login', linkLabel: '관리자 로그인' },
+  { category: '이용안내', question: '이미지가 보이지 않아요.', answer: '브라우저 새로고침 후 다시 확인해 주세요. 계속되면 페이지 주소와 화면 캡처를 보내 주세요.', href: '/apply', linkLabel: '오류 알리기' },
+  { category: '이용안내', question: '링크 미리보기가 예전 이미지로 나와요.', answer: 'SNS가 이전 정보를 캐시한 경우입니다. 새 채팅에서 다시 공유하거나 해당 서비스의 OG 캐시를 초기화해야 합니다.' },
+  { category: '이용안내', question: '챗봇은 인공지능을 사용하나요?', answer: '아닙니다. 이 안내 도우미는 미리 검토한 100개 질문과 답변에서 관련 내용을 찾아 보여주므로 AI API 비용과 임의 답변이 없습니다.' },
+  { category: '이용안내', question: '챗봇 답변에 없는 질문은 어떻게 하나요?', answer: '문의·신청 페이지나 연구소 오픈채팅을 이용해 직접 질문해 주세요.', href: '/apply', linkLabel: '직접 문의' },
+  { category: '이용안내', question: '공지사항은 어디에서 확인하나요?', answer: '상단 소식 메뉴와 공지사항 페이지에서 운영 안내와 새 소식을 확인할 수 있습니다.', href: '/notices', linkLabel: '공지사항' },
+  { category: '이용안내', question: '카카오톡으로 문의할 수 있나요?', answer: '푸터의 연구소 오픈채팅 링크를 이용할 수 있습니다.', href: 'https://open.kakao.com/o/g8xjXlIg', linkLabel: '연구소 오픈채팅' },
+  { category: '이용안내', question: '사이트 전체 메뉴를 한눈에 볼 수 있나요?', answer: '전체 사이트맵에서 연구, 교육, 도구, 파트너와 문의 메뉴를 한 번에 확인할 수 있습니다.', href: '/site-map', linkLabel: '전체 사이트맵' },
+];

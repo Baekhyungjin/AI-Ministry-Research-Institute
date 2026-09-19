@@ -41,7 +41,7 @@ export default function HomeContent() {
             <span className="reference-overline">MINISTRY AI RESEARCH INSTITUTE</span>
             <h1>기술을 앞세우기보다,<br /><em>목회의 본질을 더 깊게.</em></h1>
             <p>교회 현장에서 시작한 질문을 연구하고, 목회자가 바로 사용할 수 있는 교육과 도구로 연결합니다.</p>
-            <div className="button-row"><Link href="/columns" className="btn btn-primary">연구 결과 보기</Link><Link href="/apply" className="btn btn-secondary">강의·협력 문의</Link></div>
+            <div className="button-row"><Link href="/columns" className="btn btn-primary">연구 결과 보기</Link><Link href="/replays" className="btn btn-replay">세미나 다시보기</Link><Link href="/apply" className="btn btn-secondary">강의·협력 문의</Link></div>
             <dl className="reference-proof"><div><dt>RESEARCH</dt><dd>현장 중심 연구</dd></div><div><dt>EDUCATION</dt><dd>목회자 실습 교육</dd></div><div><dt>TOOLS</dt><dd>교회 맞춤형 도구</dd></div></dl>
           </div>
           <div className="reference-portrait-stage" aria-label="백형진 목회AI연구소 소장">
@@ -80,7 +80,8 @@ export default function HomeContent() {
 
       <section className="portal-section home-platform-section"><div className="container">
         <div className="portal-section-head" data-reveal><div><span className="eyebrow">MINISTRY AI PLATFORM</span><h2>읽는 연구에서, 쓰는 도구로</h2></div><p>연구·교육·도구·동역을 하나의 홈페이지에서 연결합니다.</p></div>
-        <div className="home-platform-grid" data-reveal><Link href="/gpts"><span>01 · GPTs</span><h3>무료·판매 GPT</h3><p>목회와 교회 업무에 맞춘 AI 도구를 공개합니다.</p><b>살펴보기 →</b></Link><Link href="/apps"><span>02 · APPS</span><h3>연구 결과 앱</h3><p>연구 결과를 실제 사용할 수 있는 웹앱으로 연결합니다.</p><b>앱 열기 →</b></Link><Link href="/partners"><span>03 · PARTNERS</span><h3>파트너 교회·개인</h3><p>함께 연구하고 현장에서 실험할 동역자를 모집합니다.</p><b>함께하기 →</b></Link><Link href="/replays"><span>04 · REPLAY</span><h3>세미나 다시보기</h3><p>신청 정보를 남기고 지난 교육을 이어서 학습합니다.</p><b>다시보기 →</b></Link></div>
+        <div className="home-platform-grid home-platform-grid-three" data-reveal><Link href="/gpts"><span>01 · GPTs</span><h3>무료·판매 GPT</h3><p>목회와 교회 업무에 맞춘 AI 도구를 공개합니다.</p><b>살펴보기 →</b></Link><Link href="/apps"><span>02 · APPS</span><h3>연구 결과 앱</h3><p>연구 결과를 실제 사용할 수 있는 웹앱으로 연결합니다.</p><b>앱 열기 →</b></Link><Link href="/partners"><span>03 · PARTNERS</span><h3>파트너 교회·개인</h3><p>함께 연구하고 현장에서 실험할 동역자를 모집합니다.</p><b>함께하기 →</b></Link></div>
+        <Link href="/replays" className="replay-sales-banner" data-reveal><div><span>PREMIUM SEMINAR REPLAY</span><h3>놓친 세미나의 핵심을<br />다시 배우고 바로 적용하세요.</h3><p>목회 현장에서 검증한 교육을 원하는 시간에 이어서 학습합니다. 후원 신청과 입금 확인 후 시청 링크를 안내합니다.</p></div><div className="replay-sales-action"><b>10,000원부터 자유 후원</b><strong>다시보기 목록 바로가기 →</strong></div></Link>
       </div></section>
 
       <section className="portal-section institute-profile"><div className="container institute-profile-grid" data-reveal>
