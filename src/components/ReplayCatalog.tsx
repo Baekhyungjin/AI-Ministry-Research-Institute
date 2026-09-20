@@ -57,7 +57,7 @@ export default function ReplayCatalog() {
   const items = records.filter((item) => item.status === 'published');
   return <>
     <div className="replay-grid">{items.map((item) => <article className="replay-card" key={item.id}>
-      <div className="replay-thumb">{item.thumbnailUrl ? <Image src={item.thumbnailUrl} alt="" fill sizes="(max-width: 760px) 100vw, 38vw" /> : <div><span>SEMINAR REPLAY</span><b>▶</b></div>}</div>
+      <div className="replay-thumb"><Image src={item.thumbnailUrl || `/api/replay-thumbnails/${encodeURIComponent(item.id)}`} alt={`${item.title} 다시보기 썸네일`} fill sizes="(max-width: 760px) 100vw, 38vw" unoptimized={!item.thumbnailUrl} /></div>
       <span>{item.publishedAt}</span><h2>{item.title}</h2><p>{item.description}</p>
       <div className="replay-support-notice"><strong>10,000원부터 자유 후원</strong><small>신청 완료 후 계좌 안내</small></div>
       <button className="btn btn-primary" onClick={() => { setError(''); setSelected(item); }}>후원 신청하고 다시보기</button>
