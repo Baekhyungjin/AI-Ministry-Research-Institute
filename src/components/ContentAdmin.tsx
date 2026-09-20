@@ -16,6 +16,7 @@ export default function ContentAdmin() {
   const [editing, setEditing] = useState<ContentItem | null>(null);
   const [blocks, setBlocks] = useState<ContentBlock[]>(() => [createContentBlock('paragraph')]);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
 
   function beginEdit(item: ContentItem) {
@@ -126,6 +127,25 @@ export default function ContentAdmin() {
     }
   }
 
+  async function removeContent(item: ContentItem) {
+    if (!confirm('이 콘텐츠를 홈페이지와 Supabase에서 삭제할까요?')) return;
+    setDeletingId(item.id);
+    setMessage('');
+    try {
+      await deleteRecord<ContentItem>('contents', item.id);
+      await Promise.allSettled([
+        deleteManagedImage(item.imageUrl),
+        ...contentBlockImageUrls(item.contentBlocks).map((url) => deleteManagedImage(url)),
+      ]);
+      if (editing?.id === item.id) resetEditor();
+      setMessage('콘텐츠를 홈페이지와 Supabase에서 삭제했습니다.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : '삭제하지 못했습니다. Supabase 연결과 관리자 권한을 확인해 주세요.');
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   const sortedRecords = [...records].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
@@ -147,7 +167,7 @@ export default function ContentAdmin() {
           <label>분류<input name="category" defaultValue={editing?.category ?? ''} placeholder="예: AI 목회, 교육, 운영" required /></label>
           <label>요약<textarea name="excerpt" rows={3} defaultValue={editing?.excerpt ?? ''} required /></label>
           {kind === 'column' ? <ContentBlockEditor blocks={blocks} onChange={setBlocks} /> : <label>본문<textarea name="body" rows={10} defaultValue={editing?.body ?? ''} required /></label>}
-          {kind === 'notice' && <fieldset className="notice-options"><legend>공지 노출 설정</legend><div className="form-grid"><label>노출 위치<select name="noticePlacement" defaultValue={editing?.noticePlacement ?? 'strip'}><option value="strip">상단 알림줄</option><option value="popup">팝업 카드</option><option value="banner">공지 목록 강조</option></select></label><label>우선순위<input type="number" name="priority" defaultValue={editing?.priority ?? 0} /></label><label>노출 시작<input type="datetime-local" name="startsAt" defaultValue={editing?.startsAt?.slice(0,16) ?? ''} /></label><label>노출 종료<input type="datetime-local" name="endsAt" defaultValue={editing?.endsAt?.slice(0,16) ?? ''} /></label><label>버튼 문구<input name="ctaLabel" defaultValue={editing?.ctaLabel ?? ''} placeholder="예: 신청하기" /></label><label>버튼 링크<input name="ctaUrl" defaultValue={editing?.ctaUrl ?? ''} placeholder="/schedule 또는 https://..." /></label></div></fieldset>}
+          {kind === 'notice' && <fieldset className="notice-options"><legend>공지 노출 설정</legend><div className="form-grid"><label>노출 위치<select name="noticePlacement" defaultValue={editing?.noticePlacement ?? 'popup'}><option value="popup">홈페이지 중앙 팝업</option><option value="strip">최상단 알림줄</option><option value="banner">홈페이지 상단 배너</option></select></label><label>우선순위<input type="number" name="priority" defaultValue={editing?.priority ?? 0} /></label><label>노출 시작<input type="datetime-local" name="startsAt" defaultValue={editing?.startsAt?.slice(0,16) ?? ''} /></label><label>노출 종료<input type="datetime-local" name="endsAt" defaultValue={editing?.endsAt?.slice(0,16) ?? ''} /></label><label>버튼 문구<input name="ctaLabel" defaultValue={editing?.ctaLabel ?? ''} placeholder="예: 신청하기" /></label><label>버튼 링크<input name="ctaUrl" defaultValue={editing?.ctaUrl ?? ''} placeholder="/schedule 또는 https://..." /></label></div><p className="notice-options-help">중앙 팝업과 상단 배너는 홈페이지 첫 화면에서만 노출됩니다. 공개 상태와 노출 기간을 함께 확인하세요.</p></fieldset>}
           <label className="content-image-field">대표 이미지
             <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" />
             <small>JPG, PNG, WEBP, GIF · 최대 5MB</small>
@@ -174,7 +194,7 @@ export default function ContentAdmin() {
                 <button type="button" onClick={() => beginEdit(item)}>수정</button>
                 <button type="button" onClick={() => updateRecord<ContentItem>('contents', item.id, { status: item.status === 'published' ? 'draft' : 'published' })}>{item.status === 'published' ? '비공개로' : '공개하기'}</button>
                 <button type="button" onClick={() => updateRecord<ContentItem>('contents', item.id, { featured: !item.featured })}>{item.featured ? '메인 해제' : '메인 표시'}</button>
-                <button type="button" className="danger" onClick={() => { if (confirm('이 콘텐츠를 삭제할까요?')) void deleteRecord<ContentItem>('contents', item.id).then(() => { void deleteManagedImage(item.imageUrl); contentBlockImageUrls(item.contentBlocks).forEach((url) => void deleteManagedImage(url)); }); }}>삭제</button>
+                <button type="button" className="danger" disabled={deletingId === item.id} onClick={() => void removeContent(item)}>{deletingId === item.id ? '삭제 중…' : '삭제'}</button>
               </div>
             </article>
           ))}

@@ -156,8 +156,9 @@ export async function updateRecord<T extends StoredRecord>(name: CollectionName,
 
 export async function deleteRecord<T extends StoredRecord>(name: CollectionName, id: string) {
   if (supabase && !isLocalDemo()) {
-    const { error } = await supabase.from(name).delete().eq('id', id);
+    const { data, error } = await supabase.from(name).delete().eq('id', id).select('id');
     if (error) throw error;
+    if (!data?.some((record) => record.id === id)) throw new Error('Supabase에서 삭제가 확인되지 않았습니다. 관리자 권한을 다시 확인해 주세요.');
     window.dispatchEvent(new CustomEvent(eventName(name)));
     return;
   }
