@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { seedContents } from '@/lib/seed-data';
 import { ContentItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -15,13 +15,45 @@ const activeNow = (item: ContentItem) => {
 
 export default function AnnouncementPopup() {
   const pathname = usePathname();
-  const { records } = useRecords<ContentItem>('contents', seedContents, true);
+  const { records, loading } = useRecords<ContentItem>('contents', seedContents, true);
   const [closed, setClosed] = useState<string[]>([]);
+  const [hiddenForToday, setHiddenForToday] = useState<string[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
   const notices = contentsSorted(records);
-  const item = notices.find((notice) => notice.noticePlacement === 'popup' && !closed.includes(notice.id));
+  const item = notices.find((notice) => notice.noticePlacement === 'popup' && !closed.includes(notice.id) && !hiddenForToday.includes(notice.id));
   const banner = notices.find((notice) => notice.noticePlacement === 'banner' && !closed.includes(notice.id));
 
-  if (pathname !== '/' || (!item && !banner)) return null;
+  useEffect(() => {
+    if (loading) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const now = Date.now();
+      const hiddenIds = records.flatMap((record) => {
+        const storedUntil = window.localStorage.getItem(`ministry-ai-notice-hidden-until:${record.id}`);
+        if (!storedUntil) return [];
+
+        const hiddenUntil = Number(storedUntil);
+        if (Number.isFinite(hiddenUntil) && hiddenUntil > now) return [record.id];
+
+        window.localStorage.removeItem(`ministry-ai-notice-hidden-until:${record.id}`);
+        return [];
+      });
+
+      setHiddenForToday(hiddenIds);
+      setStorageReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [loading, records]);
+
+  const hideUntilTomorrow = (id: string) => {
+    const tomorrow = new Date();
+    tomorrow.setHours(24, 0, 0, 0);
+    window.localStorage.setItem(`ministry-ai-notice-hidden-until:${id}`, String(tomorrow.getTime()));
+    setHiddenForToday((values) => values.includes(id) ? values : [...values, id]);
+  };
+
+  if (pathname !== '/' || !storageReady || (!item && !banner)) return null;
 
   return <>
     {banner && <aside className="announcement-banner"><div className="container"><div><span>{banner.category || 'NOTICE'}</span><strong>{banner.title}</strong><p>{banner.excerpt}</p></div><Link href={banner.ctaUrl || `/notices/${banner.id}`}>{banner.ctaLabel || '자세히 보기'} →</Link><button type="button" onClick={() => setClosed((values) => [...values, banner.id])} aria-label="배너 닫기">×</button></div></aside>}
@@ -29,7 +61,7 @@ export default function AnnouncementPopup() {
       <aside className={`announcement-popup ${item.imageUrl ? 'has-image' : ''}`}>
         <button type="button" onClick={() => setClosed((values) => [...values, item.id])} aria-label="공지 팝업 닫기">×</button>
         {item.imageUrl && <div className="announcement-popup-image"><Image src={item.imageUrl} alt={`${item.title} 공지 이미지`} fill sizes="(max-width: 600px) 92vw, 520px" unoptimized={item.imageUrl.startsWith('data:')} /></div>}
-        <div className="announcement-popup-copy"><span>{item.category || 'NOTICE'}</span><h2 id="announcement-popup-title">{item.title}</h2><p>{item.excerpt}</p><div><Link className="btn btn-primary" href={item.ctaUrl || `/notices/${item.id}`}>{item.ctaLabel || '자세히 보기'} →</Link><button type="button" onClick={() => setClosed((values) => [...values, item.id])}>닫기</button></div></div>
+        <div className="announcement-popup-copy"><span>{item.category || 'NOTICE'}</span><h2 id="announcement-popup-title">{item.title}</h2><p>{item.excerpt}</p><div><Link className="btn btn-primary" href={item.ctaUrl || `/notices/${item.id}`}>{item.ctaLabel || '자세히 보기'} →</Link><button className="announcement-hide-today" type="button" onClick={() => hideUntilTomorrow(item.id)}>오늘 하루 보지 않기</button><button type="button" onClick={() => setClosed((values) => [...values, item.id])}>닫기</button></div></div>
       </aside>
     </div>}
   </>;
