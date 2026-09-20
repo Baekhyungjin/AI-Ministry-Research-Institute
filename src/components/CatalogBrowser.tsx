@@ -5,11 +5,11 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 export function useCatalogBrowser<T>(items: T[], getSearchText: (item: T) => string) {
   const [query, setQueryState] = useState('');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(6);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 760px)');
-    const syncPageSize = () => setPageSize(media.matches ? 4 : 8);
+    const syncPageSize = () => setPageSize(media.matches ? 4 : 6);
     syncPageSize();
     media.addEventListener('change', syncPageSize);
     return () => media.removeEventListener('change', syncPageSize);

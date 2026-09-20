@@ -1270,7 +1270,7 @@ p,li,figcaption { text-wrap: pretty; }
 .catalog-filter-tabs { display: flex; flex: 0 0 auto; gap: 4px; padding: 4px; border: 1px solid #d6dee8; border-radius: 10px; background: white; }
 .catalog-filter-tabs button { min-width: 54px; height: 38px; padding: 0 12px; border: 0; border-radius: 7px; background: transparent; color: #526175; cursor: pointer; font-size: 12px; font-weight: 800; }
 .catalog-filter-tabs button.active { background: #173f78; color: white; }
-.catalog-result-grid,.replay-grid.catalog-result-grid,.app-resource-grid.catalog-result-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+.catalog-result-grid,.replay-grid.catalog-result-grid,.app-resource-grid.catalog-result-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
 .catalog-result-grid .resource-card { min-height: 320px; padding: 20px; }
 .catalog-result-grid .resource-card-image { height: 135px; margin: 0 -20px 18px; }
 .catalog-result-grid .resource-card.has-image>small { margin-top: 20px; }
