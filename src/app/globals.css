@@ -1296,6 +1296,20 @@ p,li,figcaption { text-wrap: pretty; }
   .catalog-tools-main { align-items: stretch; flex-direction: column; }.catalog-search { width: 100%; max-width: none; }
   .catalog-filter-tabs { width: 100%; }.catalog-filter-tabs button { flex: 1; }
   .catalog-tools>p { align-self: flex-end; }
-  .catalog-result-grid,.replay-grid.catalog-result-grid,.app-resource-grid.catalog-result-grid { grid-template-columns: 1fr; }
+  .catalog-result-grid,.replay-grid.catalog-result-grid,.app-resource-grid.catalog-result-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .catalog-result-grid .resource-card { min-height: 250px; padding: 12px; }
+  .catalog-result-grid .resource-card-image { height: auto; aspect-ratio: 16/9; margin: 0 -12px 12px; }
+  .catalog-result-grid .resource-card.has-image>small { margin-top: 10px; }.catalog-result-grid .resource-card:not(.has-image)>small { margin-top: 24px; }
+  .catalog-result-grid .resource-card-top { font-size: 9px; letter-spacing: .05em; }.catalog-result-grid .resource-card-top b { padding: 4px 6px; }
+  .catalog-result-grid .resource-card h3 { margin: 7px 0; font-size: 15px; line-height: 1.35; }
+  .catalog-result-grid .resource-card p { font-size: 10px; line-height: 1.55; -webkit-line-clamp: 2; }
+  .catalog-result-grid .resource-card-bottom { align-items: flex-end; gap: 6px; padding-top: 13px; }.catalog-result-grid .resource-card-bottom em { display: none; }.catalog-result-grid .resource-card-bottom a { font-size: 10px; }
+  .replay-grid.catalog-result-grid .replay-card { padding: 10px; }
+  .replay-grid.catalog-result-grid .replay-thumb { margin: -10px -10px 11px; }
+  .replay-grid.catalog-result-grid .replay-card>span { font-size: 9px; }
+  .replay-grid.catalog-result-grid .replay-card h2 { display: -webkit-box; overflow: hidden; min-height: 2.7em; margin: 6px 0; font-size: 14px; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .replay-grid.catalog-result-grid .replay-card>p { min-height: 3em; margin-bottom: 10px; font-size: 10px; line-height: 1.5; -webkit-line-clamp: 2; }
+  .replay-grid.catalog-result-grid .replay-support-notice { margin-bottom: 10px; padding: 8px; }.replay-grid.catalog-result-grid .replay-support-notice strong { font-size: 9px; }.replay-grid.catalog-result-grid .replay-support-notice small { display: none; }
+  .replay-grid.catalog-result-grid .replay-card>.btn { min-height: 38px; padding: 8px 5px; font-size: 9px; line-height: 1.25; }
   .catalog-pagination { gap: 10px; margin-top: 22px; }.catalog-pagination button { min-width: 78px; }
 }
