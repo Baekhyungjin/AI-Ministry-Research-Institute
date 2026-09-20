@@ -36,10 +36,11 @@ export default function ContentAdmin() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setSaving(true);
     setMessage('');
 
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     const now = new Date();
     const image = form.get('image');
     let imageUrl = editing?.imageUrl ?? null;
@@ -114,7 +115,7 @@ export default function ContentAdmin() {
           createdAt: now.toISOString(),
         };
         await createRecord('contents', item);
-        event.currentTarget.reset();
+        formElement.reset();
         setKind('column');
         setBlocks([createContentBlock('paragraph')]);
         setMessage(item.status === 'published' ? '콘텐츠를 공개했습니다.' : '초안으로 저장했습니다.');

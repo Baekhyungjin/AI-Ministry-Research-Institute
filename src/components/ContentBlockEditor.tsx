@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import { useState } from 'react';
 import { ContentBlock } from '@/lib/types';
-import { createContentBlock } from '@/lib/content-blocks';
+import { createContentBlock, hasMeaningfulContent, markdownToBlocks } from '@/lib/content-blocks';
 
 const blockOptions: { type: ContentBlock['type']; label: string }[] = [
   { type: 'paragraph', label: '문단' },
@@ -19,6 +20,9 @@ const blockLabels: Record<ContentBlock['type'], string> = {
 };
 
 export default function ContentBlockEditor({ blocks, onChange }: { blocks: ContentBlock[]; onChange: (blocks: ContentBlock[]) => void }) {
+  const [markdownDraft, setMarkdownDraft] = useState('');
+  const [importMessage, setImportMessage] = useState('');
+
   function update(index: number, block: ContentBlock) {
     onChange(blocks.map((item, itemIndex) => itemIndex === index ? block : item));
   }
@@ -36,9 +40,46 @@ export default function ContentBlockEditor({ blocks, onChange }: { blocks: Conte
     onChange(next.length ? next : [createContentBlock('paragraph')]);
   }
 
+  function applyMarkdown(value: string) {
+    const next = markdownToBlocks(value);
+    if (!value.trim() || !hasMeaningfulContent(next)) {
+      setImportMessage('변환할 글을 입력해 주세요.');
+      return;
+    }
+
+    if (hasMeaningfulContent(blocks) && !window.confirm('현재 작성 중인 본문을 붙여넣은 글로 교체할까요?')) {
+      setMarkdownDraft(value);
+      setImportMessage('기존 본문은 유지했습니다.');
+      return;
+    }
+
+    onChange(next);
+    setMarkdownDraft('');
+    setImportMessage(`${next.length}개 블록으로 자동 변환했습니다.`);
+  }
+
   return (
     <section className="block-editor" aria-label="칼럼 본문 편집기">
       <div className="block-editor-heading"><div><strong>칼럼 본문 구성</strong><span>필요한 블록을 추가하고 순서를 바꿀 수 있습니다.</span></div><b>{blocks.length}개 블록</b></div>
+      <div className="markdown-import">
+        <div><strong>AI·마크다운 글 한 번에 붙여넣기</strong><span>붙여넣으면 문단, 소제목, 목록, 인용문, 구분선과 링크를 자동으로 블록화합니다.</span></div>
+        <textarea
+          rows={5}
+          value={markdownDraft}
+          onChange={(event) => { setMarkdownDraft(event.target.value); setImportMessage(''); }}
+          onPaste={(event) => {
+            const text = event.clipboardData.getData('text/plain');
+            if (!text.trim()) return;
+            event.preventDefault();
+            setMarkdownDraft(text);
+            applyMarkdown(text);
+          }}
+          placeholder={'## 소제목\n\nAI에서 생성한 글 전체를 여기에 붙여넣으세요.\n\n- 첫 번째 항목\n- 두 번째 항목'}
+          aria-label="AI 또는 마크다운 글 붙여넣기"
+        />
+        <div className="markdown-import-actions"><small>이미지는 보안을 위해 아래의 이미지 블록에서 직접 업로드해 주세요.</small><button type="button" onClick={() => applyMarkdown(markdownDraft)}>입력한 글 변환하기</button></div>
+        {importMessage && <p role="status">{importMessage}</p>}
+      </div>
       <div className="block-list">
         {blocks.map((block, index) => (
           <article className={`editor-block type-${block.type}`} key={block.id}>

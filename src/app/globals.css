@@ -1092,6 +1092,11 @@ p,li,figcaption { text-wrap: pretty; }
 .block-editor-heading strong { font-size: 14px; }
 .block-editor-heading span { color: var(--steel); font-size: 10px; }
 .block-editor-heading>b { color: var(--brand-blue); font-size: 10px; }
+.markdown-import { display: flex; flex-direction: column; gap: 10px; padding: 15px; border: 1px solid #bfd1e8; border-radius: 12px; background: linear-gradient(135deg,#f7f4ff,#edf7ff); }
+.markdown-import>div:first-child { display: flex; flex-direction: column; gap: 4px; }.markdown-import>div:first-child strong { color: #172b49; font-size: 13px; }.markdown-import>div:first-child span { color: #617188; font-size: 10px; line-height: 1.55; }
+.markdown-import textarea { min-height: 118px; padding: 12px; border: 1px solid #cfd9e6; border-radius: 9px; background: rgba(255,255,255,.92); font: inherit; font-size: 12px; line-height: 1.65; resize: vertical; }
+.markdown-import-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }.markdown-import-actions small { color: #697b91; font-size: 9px; line-height: 1.5; }.markdown-import-actions button { flex: 0 0 auto; min-height: 36px; padding: 0 13px; border: 0; border-radius: 8px; background: #173f78; color: white; cursor: pointer; font-size: 10px; font-weight: 800; }
+.markdown-import>p { margin: 0; color: #176b3a; font-size: 10px; font-weight: 750; }
 .block-list { display: flex; flex-direction: column; gap: 10px; }
 .editor-block { display: flex; min-width: 0; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid #dce3ed; border-radius: 12px; background: #fff; box-shadow: 0 3px 12px rgba(18,35,62,.035); }
 .editor-block>header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid #edf0f4; }
@@ -1123,6 +1128,7 @@ p,li,figcaption { text-wrap: pretty; }
 .article-blocks>ul,.article-blocks>ol { display: grid; gap: 10px; padding-left: 25px; color: #26384f; font-size: 16px; line-height: 1.8; }
 .article-blocks li::marker { color: var(--brand-blue); font-weight: 800; }
 .article-blocks>hr { width: 100%; height: 1px; margin: 20px 0; border: 0; background: #dce2e9; }
+.article-blocks p>a,.article-blocks li>a,.article-blocks blockquote a { color: var(--brand-blue); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }.article-blocks code { padding: 2px 6px; border-radius: 5px; background: #edf2f8; color: #29496f; font-size: .9em; }.article-blocks del { color: #7b8797; }
 .article-inline-image { margin: 14px 0; }
 .article-inline-image img { display: block; width: 100%; height: auto; max-height: 720px; border-radius: 18px; object-fit: contain; background: #f1f4f8; }
 .article-inline-image figcaption { margin-top: 10px; color: #718093; font-size: 11px; line-height: 1.6; text-align: center; }
@@ -1133,6 +1139,7 @@ p,li,figcaption { text-wrap: pretty; }
 .article-link-card>b { grid-column: 2; grid-row: 2/span 2; align-self: center; color: var(--brand-blue); font-size: 12px; }
 @media (max-width: 600px) {
   .block-editor { padding: 13px; }
+  .markdown-import-actions { align-items: stretch; flex-direction: column; }.markdown-import-actions button { width: 100%; }
   .editor-block { padding: 13px; }
   .article-blocks { gap: 20px; }
   .article-blocks>p { font-size: 16px; line-height: 1.85; }
