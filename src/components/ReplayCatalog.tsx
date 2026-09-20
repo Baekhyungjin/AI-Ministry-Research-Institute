@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { confirmReplaySupport, submitReplaySupport } from '@/app/replays/actions';
+import { CatalogPagination, CatalogToolbar, useCatalogBrowser } from '@/components/CatalogBrowser';
 import { seedReplays } from '@/lib/seed-data';
 import { ReplayItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -12,6 +13,7 @@ import { getYouTubeEmbedUrl } from '@/lib/youtube';
 type PublicReplayItem = Omit<ReplayItem, 'videoUrl'>;
 const publicReplaySeed: PublicReplayItem[] = seedReplays;
 const publicReplayFields = 'id,title,description,thumbnail_url,status,published_at,created_at';
+const replaySearchText = (item: PublicReplayItem) => [item.title, item.description, item.publishedAt].join(' ');
 
 type SupportReceipt = {
   accessId: string;
@@ -25,6 +27,8 @@ type ReplayViewer = { replayTitle: string; videoUrl: string };
 
 export default function ReplayCatalog() {
   const { records, loading } = useRecords<PublicReplayItem>('replays', publicReplaySeed, true, publicReplayFields);
+  const items = records.filter((item) => item.status === 'published');
+  const browser = useCatalogBrowser(items, replaySearchText);
   const [selected, setSelected] = useState<PublicReplayItem | null>(null);
   const [receipt, setReceipt] = useState<SupportReceipt | null>(null);
   const [viewer, setViewer] = useState<ReplayViewer | null>(null);
@@ -84,15 +88,16 @@ export default function ReplayCatalog() {
     setCopied(true);
   }
 
-  const items = records.filter((item) => item.status === 'published');
   return <>
-    <div className="replay-grid">{items.map((item) => <article className="replay-card" key={item.id}>
-      <div className="replay-thumb"><Image src={item.thumbnailUrl || `/api/replay-thumbnails/${encodeURIComponent(item.id)}`} alt={`${item.title} 다시보기 썸네일`} fill sizes="(max-width: 760px) 100vw, 38vw" unoptimized={!item.thumbnailUrl} /></div>
+    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="세미나 제목·내용 검색" />
+    <div className="replay-grid catalog-result-grid">{browser.visibleItems.map((item) => <article className="replay-card" key={item.id}>
+      <div className="replay-thumb"><Image src={item.thumbnailUrl || `/api/replay-thumbnails/${encodeURIComponent(item.id)}`} alt={`${item.title} 다시보기 썸네일`} fill sizes="(max-width: 760px) 100vw, 25vw" unoptimized={!item.thumbnailUrl} /></div>
       <span>{item.publishedAt}</span><h2>{item.title}</h2><p>{item.description}</p>
       <div className="replay-support-notice"><strong>10,000원부터 자유 후원</strong><small>신청 완료 후 계좌 안내</small></div>
       <button className="btn btn-primary" onClick={() => { setError(''); setSelected(item); }}>후원 신청하고 다시보기</button>
     </article>)}</div>
-    {!loading && !items.length && <div className="catalog-empty"><strong>등록된 세미나 다시보기가 없습니다.</strong><p>관리자에서 영상과 안내를 등록하면 후원 신청 폼과 함께 공개됩니다.</p></div>}
+    {!loading && !browser.filteredItems.length && <div className="catalog-empty"><strong>{items.length ? '검색 결과가 없습니다.' : '등록된 세미나 다시보기가 없습니다.'}</strong><p>{items.length ? '다른 세미나 제목이나 내용으로 검색해 보세요.' : '관리자에서 영상과 안내를 등록하면 후원 신청 폼과 함께 공개됩니다.'}</p></div>}
+    <CatalogPagination page={browser.page} pageCount={browser.pageCount} onPageChange={browser.setPage} />
 
     {selected && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="replay-support-title"><form className="replay-modal" onSubmit={submit}>
       <button className="modal-close" type="button" onClick={() => setSelected(null)} aria-label="닫기">×</button>
