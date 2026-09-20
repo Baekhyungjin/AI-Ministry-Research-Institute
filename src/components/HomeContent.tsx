@@ -81,7 +81,7 @@ export default function HomeContent() {
       <section className="portal-section home-platform-section"><div className="container">
         <div className="portal-section-head" data-reveal><div><span className="eyebrow">MINISTRY AI PLATFORM</span><h2>읽는 연구에서, 쓰는 도구로</h2></div><p>연구·교육·도구·동역을 하나의 홈페이지에서 연결합니다.</p></div>
         <div className="home-platform-grid home-platform-grid-three" data-reveal><Link href="/gpts"><span>01 · GPTs</span><h3>무료·판매 GPT</h3><p>목회와 교회 업무에 맞춘 AI 도구를 공개합니다.</p><b>살펴보기 →</b></Link><Link href="/apps"><span>02 · APPS</span><h3>연구 결과 앱</h3><p>연구 결과를 실제 사용할 수 있는 웹앱으로 연결합니다.</p><b>앱 열기 →</b></Link><Link href="/partners"><span>03 · PARTNERS</span><h3>파트너 교회·개인</h3><p>함께 연구하고 현장에서 실험할 동역자를 모집합니다.</p><b>함께하기 →</b></Link></div>
-        <Link href="/replays" className="replay-sales-banner" data-reveal><div><span>PREMIUM SEMINAR REPLAY</span><h3>놓친 세미나의 핵심을<br />다시 배우고 바로 적용하세요.</h3><p>목회 현장에서 검증한 교육을 원하는 시간에 이어서 학습합니다. 후원 신청과 입금 확인 후 시청 링크를 안내합니다.</p></div><div className="replay-sales-action"><b>10,000원부터 자유 후원</b><strong>다시보기 목록 바로가기 →</strong></div></Link>
+        <Link href="/replays" className="replay-sales-banner" data-reveal><div><span>PREMIUM SEMINAR REPLAY</span><h3>놓친 세미나의 핵심을<br />다시 배우고 바로 적용하세요.</h3><p>목회 현장에서 검증한 교육을 원하는 시간에 이어서 학습합니다. 후원 후 입금 완료를 표시하면 바로 시청할 수 있습니다.</p></div><div className="replay-sales-action"><b>10,000원부터 자유 후원</b><strong>다시보기 목록 바로가기 →</strong></div></Link>
       </div></section>
 
       <section className="portal-section institute-profile"><div className="container institute-profile-grid" data-reveal>

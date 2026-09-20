@@ -21,3 +21,8 @@ export function extractYouTubeVideoId(value: string) {
     return null;
   }
 }
+
+export function getYouTubeEmbedUrl(value: string) {
+  const videoId = extractYouTubeVideoId(value);
+  return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0` : null;
+}

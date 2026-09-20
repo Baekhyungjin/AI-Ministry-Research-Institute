@@ -3,27 +3,35 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
-import { submitReplaySupport } from '@/app/replays/actions';
+import { confirmReplaySupport, submitReplaySupport } from '@/app/replays/actions';
 import { seedReplays } from '@/lib/seed-data';
 import { ReplayItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
+import { getYouTubeEmbedUrl } from '@/lib/youtube';
 
 type PublicReplayItem = Omit<ReplayItem, 'videoUrl'>;
 const publicReplaySeed: PublicReplayItem[] = seedReplays;
 const publicReplayFields = 'id,title,description,thumbnail_url,status,published_at,created_at';
 
 type SupportReceipt = {
+  accessId: string;
   account: string;
   replayTitle: string;
   depositorName: string;
   supportAmount: number;
 };
 
+type ReplayViewer = { replayTitle: string; videoUrl: string };
+
 export default function ReplayCatalog() {
   const { records, loading } = useRecords<PublicReplayItem>('replays', publicReplaySeed, true, publicReplayFields);
   const [selected, setSelected] = useState<PublicReplayItem | null>(null);
   const [receipt, setReceipt] = useState<SupportReceipt | null>(null);
+  const [viewer, setViewer] = useState<ReplayViewer | null>(null);
+  const [transferConfirmed, setTransferConfirmed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [opening, setOpening] = useState(false);
   const [error, setError] = useState('');
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -51,7 +59,29 @@ export default function ReplayCatalog() {
       return;
     }
     setReceipt(result);
+    setTransferConfirmed(false);
+    setCopied(false);
     setSelected(null);
+  }
+
+  async function openReplay() {
+    if (!receipt || !transferConfirmed || opening) return;
+    setOpening(true);
+    setError('');
+    const result = await confirmReplaySupport(receipt.accessId);
+    setOpening(false);
+    if (!result.ok) {
+      setError(result.message);
+      return;
+    }
+    setViewer(result);
+    setReceipt(null);
+  }
+
+  async function copyAccount() {
+    if (!receipt) return;
+    await navigator.clipboard.writeText(receipt.account);
+    setCopied(true);
   }
 
   const items = records.filter((item) => item.status === 'published');
@@ -88,8 +118,23 @@ export default function ReplayCatalog() {
       <p>아래 계좌로 신청한 금액을 입금해 주세요.</p>
       <div className="support-account-panel"><small>후원 계좌</small><strong>{receipt.account}</strong></div>
       <dl className="support-summary"><div><dt>입금자명</dt><dd>{receipt.depositorName}</dd></div><div><dt>신청 금액</dt><dd>{receipt.supportAmount.toLocaleString('ko-KR')}원</dd></div></dl>
-      <p className="support-result-note">입금 확인 후 신청하신 연락처 또는 이메일로 세미나 시청 링크를 안내합니다.</p>
-      <button className="btn btn-primary" type="button" onClick={() => setReceipt(null)}>확인</button>
+      <button className="support-account-copy" type="button" onClick={() => void copyAccount()}>{copied ? '계좌번호를 복사했습니다' : '계좌번호 복사'}</button>
+      <label className="consent-row replay-transfer-confirm"><input type="checkbox" checked={transferConfirmed} onChange={(event) => setTransferConfirmed(event.target.checked)} /><span>위 계좌로 신청한 후원금의 입금을 완료했습니다.</span></label>
+      <p className="support-result-note">별도의 관리자 확인이나 이메일 발송 없이, 입금 완료 표시 후 바로 시청할 수 있습니다.</p>
+      {error ? <p className="form-error" role="alert">{error}</p> : null}
+      <button className="btn btn-primary" type="button" disabled={!transferConfirmed || opening} onClick={() => void openReplay()}>{opening ? '영상 준비 중…' : '후원 완료하고 영상 시청하기'}</button>
     </div></div>}
+
+    {viewer && <ReplayViewerModal viewer={viewer} onClose={() => setViewer(null)} />}
   </>;
+}
+
+function ReplayViewerModal({ viewer, onClose }: { viewer: ReplayViewer; onClose: () => void }) {
+  const embedUrl = getYouTubeEmbedUrl(viewer.videoUrl);
+  return <div className="modal-backdrop replay-viewer-backdrop" role="dialog" aria-modal="true" aria-labelledby="replay-viewer-title"><div className="replay-viewer-modal">
+    <button className="modal-close" type="button" onClick={onClose} aria-label="닫기">×</button>
+    <span>SEMINAR VIEWING</span><h2 id="replay-viewer-title">{viewer.replayTitle}</h2>
+    {embedUrl ? <div className="replay-video-frame"><iframe src={embedUrl} title={viewer.replayTitle} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen /></div> : <div className="replay-external-video"><p>새 창에서 영상을 시청할 수 있습니다.</p><a className="btn btn-primary" href={viewer.videoUrl} target="_blank" rel="noopener noreferrer">영상 열기</a></div>}
+    <section className="replay-kakao-cta"><div><small>AFTER THE SEMINAR</small><h3>목회 현장에 적용하면서 AI의 도움이 필요하신가요?</h3><p>목회AI연구소 오픈카톡방에서 질문과 실제 적용 사례를 함께 나눕니다.</p></div><a className="btn btn-primary" href="https://open.kakao.com/o/g8xjXlIg" target="_blank" rel="noopener noreferrer">연구소 오픈카톡 참여하기 →</a></section>
+  </div></div>;
 }

@@ -21,7 +21,11 @@ export interface ReplaySupportInput {
 }
 
 export type ReplaySupportResult =
-  | { ok: true; account: string; replayTitle: string; depositorName: string; supportAmount: number }
+  | { ok: true; accessId: string; account: string; replayTitle: string; depositorName: string; supportAmount: number }
+  | { ok: false; message: string };
+
+export type ReplayViewingResult =
+  | { ok: true; replayTitle: string; videoUrl: string }
   | { ok: false; message: string };
 
 const clean = (value: string, maxLength = 160) => value.trim().slice(0, maxLength);
@@ -94,5 +98,22 @@ export async function submitReplaySupport(input: ReplaySupportInput): Promise<Re
     ],
     idempotencyKey: submissionId,
   });
-  return { ok: true, account, replayTitle: replay.title, depositorName, supportAmount };
+  return { ok: true, accessId: submissionId, account, replayTitle: replay.title, depositorName, supportAmount };
+}
+
+export async function confirmReplaySupport(accessIdValue: string): Promise<ReplayViewingResult> {
+  const accessId = clean(accessIdValue, 160);
+  if (!accessId.startsWith('replay-access-')) return { ok: false, message: '다시보기 신청 정보를 확인해 주세요.' };
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !supabaseKey) return { ok: false, message: '다시보기 설정을 확인하고 있습니다. 잠시 후 다시 시도해 주세요.' };
+
+  const supabase = createClient(supabaseUrl, supabaseKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const { data, error } = await supabase.rpc('confirm_replay_access', { p_access_id: accessId });
+  const replay = Array.isArray(data) ? data[0] : null;
+  if (error || !replay?.video_url) return { ok: false, message: '영상 정보를 불러오지 못했습니다. 신청 내용을 다시 확인해 주세요.' };
+  return { ok: true, replayTitle: replay.replay_title, videoUrl: replay.video_url };
 }

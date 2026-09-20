@@ -27,11 +27,11 @@ export const inquiryFaqs: InquiryFaq[] = [
 
   // 다시보기 21-30
   { category: '다시보기', question: '세미나 다시보기는 어디에 있나요?', answer: '세미나 다시보기 전용 페이지에서 공개된 교육 영상 목록을 확인할 수 있습니다.', href: '/replays', linkLabel: '다시보기 바로가기' },
-  { category: '다시보기', question: '다시보기는 무료인가요?', answer: '현재 다시보기는 10,000원부터 자유롭게 후원한 뒤 입금 확인을 거쳐 이용하는 방식입니다.', href: '/replays', linkLabel: '다시보기 신청' },
+  { category: '다시보기', question: '다시보기는 무료인가요?', answer: '현재 다시보기는 10,000원부터 자유롭게 후원하고 입금 완료를 직접 표시한 뒤 바로 이용하는 방식입니다.', href: '/replays', linkLabel: '다시보기 신청' },
   { category: '다시보기', question: '다시보기 후원금은 얼마인가요?', answer: '최소 10,000원부터 원하는 금액으로 후원할 수 있습니다.' },
-  { category: '다시보기', question: '다시보기 신청 후 바로 볼 수 있나요?', answer: '신청과 입금 확인 후 등록한 이메일 또는 연락처로 시청 링크를 안내합니다.' },
+  { category: '다시보기', question: '다시보기 신청 후 바로 볼 수 있나요?', answer: '후원 신청 후 계좌로 입금하고 완료 항목을 표시하면 별도의 관리자 확인 없이 바로 시청할 수 있습니다.', href: '/replays', linkLabel: '다시보기 신청' },
   { category: '다시보기', question: '다시보기 계좌는 어디에서 확인하나요?', answer: '후원 신청이 정상 접수되면 완료 화면에 입금 계좌가 표시됩니다.', href: '/replays', linkLabel: '후원 신청' },
-  { category: '다시보기', question: '다시보기 링크를 받지 못했어요.', answer: '입금자명과 신청 이메일을 확인한 뒤 문의 페이지로 알려 주세요.', href: '/apply', linkLabel: '링크 문의' },
+  { category: '다시보기', question: '다시보기 링크를 받지 못했어요.', answer: '별도의 이메일 링크는 발송하지 않습니다. 신청 완료 화면에서 입금 완료를 표시하면 곧바로 영상이 열립니다. 화면을 닫았거나 영상이 열리지 않으면 문의해 주세요.', href: '/apply', linkLabel: '시청 문의' },
   { category: '다시보기', question: '다시보기는 어떻게 신청하나요?', answer: '다시보기 페이지에서 원하는 영상을 선택하고 성함, 연락처, 이메일, 후원 금액과 입금자명을 입력해 신청합니다.', href: '/replays', linkLabel: '다시보기 신청' },
   { category: '다시보기', question: '다시보기 영상을 다른 사람과 공유해도 되나요?', answer: '시청 링크는 신청자 본인용입니다. 무단 공유·복제·재배포는 허용되지 않습니다.' },
   { category: '다시보기', question: '여러 세미나를 한꺼번에 구매할 수 있나요?', answer: '현재는 영상별 신청 방식입니다. 묶음 이용이나 단체 이용은 별도로 문의해 주세요.', href: '/apply', linkLabel: '묶음 이용 문의' },
