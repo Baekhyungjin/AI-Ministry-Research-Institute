@@ -12,6 +12,7 @@ const adminLinks = [
   { href: '/admin/schedules', label: '일정 관리' },
   { href: '/admin/resources', label: 'GPT·앱·다시보기' },
   { href: '/admin/leads', label: '파트너·시청 신청' },
+  { href: '/admin/comments', label: '댓글 관리' },
   { href: '/admin/analytics', label: '방문·조회 통계' },
 ];
 

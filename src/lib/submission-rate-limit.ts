@@ -3,7 +3,7 @@ import 'server-only';
 import { createHash } from 'crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-type SubmissionScope = 'application' | 'partner' | 'replay';
+type SubmissionScope = 'application' | 'partner' | 'replay' | 'comment';
 type HeaderReader = Pick<Headers, 'get'>;
 
 export async function consumeSubmissionRateLimit(
