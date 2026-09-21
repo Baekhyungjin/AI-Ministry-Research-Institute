@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { ContentItem } from '@/lib/types';
 import ContentBlocks from '@/components/ContentBlocks';
 import { legacyBodyToBlocks } from '@/lib/content-blocks';
+import ContentShareActions from '@/components/ContentShareActions';
 
 export default function ContentDetail({ item }: { item: ContentItem }) {
   const back = item.kind === 'column' ? '/columns' : '/notices';
@@ -12,6 +13,7 @@ export default function ContentDetail({ item }: { item: ContentItem }) {
       <div className="narrow-container">
         <Link href={back} className="back-link">← 목록으로</Link>
         <header className="article-header"><span className="badge badge-blue">{item.category}</span><h1>{item.title}</h1><p>{item.excerpt}</p><time>{item.publishedAt}</time></header>
+        {item.kind === 'column' && <ContentShareActions id={item.id} title={item.title} excerpt={item.excerpt} />}
         {item.imageUrl && <figure className="article-cover"><Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} width={1200} height={720} sizes="(max-width: 900px) 100vw, 900px" unoptimized={item.imageUrl.startsWith('data:')} /></figure>}
         <div className="article-body"><ContentBlocks blocks={item.contentBlocks?.length ? item.contentBlocks : legacyBodyToBlocks(item.body)} /></div>
         <div className="article-end"><strong>현장에 적용할 방법을 함께 찾고 싶으신가요?</strong><Link href="/apply" className="btn btn-primary">연구소에 문의하기</Link></div>
