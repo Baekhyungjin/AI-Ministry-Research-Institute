@@ -9,6 +9,7 @@ import { useRecords } from '@/lib/use-records';
 import { deleteManagedImage, uploadContentImage, uploadManagedImage } from '@/lib/storage';
 import ContentBlockEditor from '@/components/ContentBlockEditor';
 import { blocksToPlainText, contentBlockImageUrls, createContentBlock, hasMeaningfulContent, legacyBodyToBlocks } from '@/lib/content-blocks';
+import { columnCategories } from '@/lib/content-taxonomy';
 
 export default function ContentAdmin() {
   const { records } = useRecords<ContentItem>('contents', seedContents);
@@ -165,7 +166,9 @@ export default function ContentAdmin() {
             <button type="button" className={kind === 'notice' ? 'active' : ''} onClick={() => setKind('notice')}>공지</button>
           </div>
           <label>제목<input name="title" defaultValue={editing?.title ?? ''} required /></label>
-          <label>분류<input name="category" defaultValue={editing?.category ?? ''} placeholder="예: AI 목회, 교육, 운영" required /></label>
+          <label>분류<input name="category" list={kind === 'column' ? 'column-category-options' : 'notice-category-options'} defaultValue={editing?.category ?? ''} placeholder={kind === 'column' ? '연구 분야를 선택하거나 직접 입력' : '예: 운영 안내, 교육 안내'} required /></label>
+          <datalist id="column-category-options">{columnCategories.map((entry) => <option value={entry.label} key={entry.label} />)}</datalist>
+          <datalist id="notice-category-options"><option value="운영 안내" /><option value="교육 안내" /><option value="출간 소식" /><option value="행사 안내" /></datalist>
           <label>요약<textarea name="excerpt" rows={3} defaultValue={editing?.excerpt ?? ''} required /></label>
           {kind === 'column' ? <ContentBlockEditor blocks={blocks} onChange={setBlocks} /> : <label>본문<textarea name="body" rows={10} defaultValue={editing?.body ?? ''} required /></label>}
           {kind === 'notice' && <fieldset className="notice-options"><legend>공지 노출 설정</legend><div className="form-grid"><label>노출 위치<select name="noticePlacement" defaultValue={editing?.noticePlacement ?? 'popup'}><option value="popup">홈페이지 중앙 팝업</option><option value="strip">최상단 알림줄</option><option value="banner">홈페이지 상단 배너</option></select></label><label>우선순위<input type="number" name="priority" defaultValue={editing?.priority ?? 0} /></label><label>노출 시작<input type="datetime-local" name="startsAt" defaultValue={editing?.startsAt?.slice(0,16) ?? ''} /></label><label>노출 종료<input type="datetime-local" name="endsAt" defaultValue={editing?.endsAt?.slice(0,16) ?? ''} /></label><label>버튼 문구<input name="ctaLabel" defaultValue={editing?.ctaLabel ?? ''} placeholder="예: 신청하기" /></label><label>버튼 링크<input name="ctaUrl" defaultValue={editing?.ctaUrl ?? ''} placeholder="/schedule 또는 https://..." /></label></div><p className="notice-options-help">중앙 팝업과 상단 배너는 홈페이지 첫 화면에서만 노출됩니다. 공개 상태와 노출 기간을 함께 확인하세요.</p></fieldset>}

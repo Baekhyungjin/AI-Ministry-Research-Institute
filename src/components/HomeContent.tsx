@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { seedContents, seedSchedules } from '@/lib/seed-data';
 import { ContentItem, ScheduleItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
+import { columnCategoryHref } from '@/lib/content-taxonomy';
 
 const researchAreas = [
-  { number: '01', title: '설교와 성경 연구', description: '본문 연구와 자료 정리를 돕되 해석의 책임은 목회자에게 남기는 활용법을 연구합니다.', href: '/columns' },
-  { number: '02', title: '교회 행정과 콘텐츠', description: '반복 업무를 줄이고 작은 교회도 지속할 수 있는 제작 체계를 만듭니다.', href: '/columns' },
-  { number: '03', title: 'AI 윤리와 목회', description: '개인정보, 저작권, 신학적 분별을 현장에서 적용할 수 있는 기준으로 정리합니다.', href: '/columns' },
+  { number: '01', title: '설교와 성경 연구', description: '본문 연구와 자료 정리를 돕되 해석의 책임은 목회자에게 남기는 활용법을 연구합니다.', href: columnCategoryHref('설교와 성경 연구') },
+  { number: '02', title: '교회 행정과 콘텐츠', description: '반복 업무를 줄이고 작은 교회도 지속할 수 있는 제작 체계를 만듭니다.', href: columnCategoryHref('교회 행정과 콘텐츠') },
+  { number: '03', title: 'AI 윤리와 목회', description: '개인정보, 저작권, 신학적 분별을 현장에서 적용할 수 있는 기준으로 정리합니다.', href: columnCategoryHref('AI 윤리와 목회') },
 ];
 
 const quickLinks = [

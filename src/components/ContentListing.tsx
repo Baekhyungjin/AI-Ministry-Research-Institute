@@ -7,24 +7,47 @@ import { CatalogPagination, CatalogToolbar, CatalogViewControls, CatalogViewMode
 import { seedContents } from '@/lib/seed-data';
 import { ContentItem, ContentKind } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
+import { columnCategories, isCanonicalColumnCategoryAlias, matchesColumnCategory } from '@/lib/content-taxonomy';
 
 const contentSearchText = (item: ContentItem) => [item.title, item.excerpt, item.category, item.publishedAt].join(' ');
 
-export default function ContentListing({ kind }: { kind: ContentKind }) {
+export default function ContentListing({ kind, initialCategory = 'all', initialQuery = '' }: { kind: ContentKind; initialCategory?: string; initialQuery?: string }) {
   const { records, loading } = useRecords<ContentItem>('contents', seedContents, true);
   const items = records.filter((item) => item.kind === kind && item.status === 'published').sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   const base = kind === 'column' ? '/columns' : '/notices';
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(initialCategory);
   const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
   const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
-  const categories = Array.from(new Set(items.map((item) => item.category).filter(Boolean)));
-  const categoryItems = category === 'all' ? items : items.filter((item) => item.category === category);
+  const storedCategories = Array.from(new Set(items.map((item) => item.category).filter(Boolean)));
+  const customCategories = kind === 'column' ? storedCategories.filter((name) => !isCanonicalColumnCategoryAlias(name)) : storedCategories;
+  const categories = Array.from(new Set([
+    ...(kind === 'column' ? columnCategories.map((entry) => entry.label) : []),
+    ...customCategories,
+    ...(initialCategory !== 'all' ? [initialCategory] : []),
+  ]));
+  const categoryItems = category === 'all'
+    ? items
+    : items.filter((item) => kind === 'column' ? matchesColumnCategory(item.category, category) : item.category === category);
   const pageSize = viewMode === 'card' ? 12 : listPageSize;
-  const browser = useCatalogBrowser(categoryItems, contentSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
+  const browser = useCatalogBrowser(categoryItems, contentSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize, initialQuery });
+
+  function updateCatalogUrl(nextCategory: string, nextQuery: string) {
+    const params = new URLSearchParams();
+    if (nextCategory !== 'all') params.set('category', nextCategory);
+    if (nextQuery.trim()) params.set('q', nextQuery.trim());
+    const queryString = params.toString();
+    window.history.replaceState(null, '', queryString ? `${base}?${queryString}` : base);
+  }
 
   function changeCategory(nextCategory: string) {
     setCategory(nextCategory);
     browser.setPage(1);
+    updateCatalogUrl(nextCategory, browser.query);
+  }
+
+  function changeQuery(nextQuery: string) {
+    browser.setQuery(nextQuery);
+    updateCatalogUrl(category, nextQuery);
   }
 
   if (loading) return <div className="loading-line">콘텐츠를 불러오는 중입니다.</div>;
@@ -32,7 +55,7 @@ export default function ContentListing({ kind }: { kind: ContentKind }) {
     <section className="content-catalog">
       <CatalogToolbar
         query={browser.query}
-        onQueryChange={browser.setQuery}
+        onQueryChange={changeQuery}
         resultCount={browser.filteredItems.length}
         totalCount={categoryItems.length}
         placeholder={kind === 'column' ? '칼럼 제목·내용·분류 검색' : '공지 제목·내용·분류 검색'}
@@ -42,6 +65,7 @@ export default function ContentListing({ kind }: { kind: ContentKind }) {
         </div> : undefined}
         viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />}
       />
+      {category !== 'all' && <div className="catalog-filter-summary" role="status"><div><span>{kind === 'column' ? '선택한 연구 분야' : '선택한 공지 분류'}</span><strong>{category}</strong></div><button type="button" onClick={() => changeCategory('all')}>전체 {kind === 'column' ? '칼럼' : '공지'} 보기</button></div>}
       <div className={`content-card-grid catalog-${viewMode}-view`}>
         {browser.visibleItems.map((item, index) => (
           <Link href={`${base}/${item.id}`} className={`article-card content-list-card tone-${(index % 3) + 1}`} key={item.id}>
@@ -50,7 +74,7 @@ export default function ContentListing({ kind }: { kind: ContentKind }) {
           </Link>
         ))}
       </div>
-      {!browser.filteredItems.length && <div className="catalog-empty"><strong>{items.length ? '검색 결과가 없습니다.' : '아직 발행된 글이 없습니다.'}</strong><p>{items.length ? '검색어 또는 분류를 바꿔 보세요.' : '관리자에서 공개 상태로 등록하면 이곳에 표시됩니다.'}</p></div>}
+      {!browser.filteredItems.length && <div className="catalog-empty"><strong>{items.length ? '검색 결과가 없습니다.' : '아직 발행된 글이 없습니다.'}</strong><p>{items.length ? category !== 'all' ? `${category} 분류에 공개된 ${kind === 'column' ? '칼럼' : '공지'}이 아직 없습니다. 다른 분류를 선택하거나 관리자에서 이 분류로 글을 등록해 주세요.` : '검색어 또는 분류를 바꿔 보세요.' : '관리자에서 공개 상태로 등록하면 이곳에 표시됩니다.'}</p></div>}
       <CatalogPagination page={browser.page} pageCount={browser.pageCount} onPageChange={browser.setPage} />
     </section>
   );

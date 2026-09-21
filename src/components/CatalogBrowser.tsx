@@ -7,9 +7,9 @@ export type CatalogViewMode = 'card' | 'list';
 export function useCatalogBrowser<T>(
   items: T[],
   getSearchText: (item: T) => string,
-  options: { desktopPageSize?: number; mobilePageSize?: number } = {},
+  options: { desktopPageSize?: number; mobilePageSize?: number; initialQuery?: string } = {},
 ) {
-  const [query, setQueryState] = useState('');
+  const [query, setQueryState] = useState(options.initialQuery ?? '');
   const [page, setPage] = useState(1);
   const desktopPageSize = options.desktopPageSize ?? 6;
   const mobilePageSize = options.mobilePageSize ?? 4;
