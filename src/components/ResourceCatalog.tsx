@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { CatalogPagination, CatalogToolbar, useCatalogBrowser } from '@/components/CatalogBrowser';
+import { CatalogPagination, CatalogToolbar, CatalogViewControls, CatalogViewMode, useCatalogBrowser } from '@/components/CatalogBrowser';
 import { seedApps, seedGpts } from '@/lib/seed-data';
 import { AppItem, GptItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -14,9 +14,12 @@ const appSearchText = (item: AppItem) => [item.title, item.description, item.cat
 export function GptCatalog() {
   const { records, loading } = useRecords<GptItem>('gpts', seedGpts, true);
   const [plan, setPlan] = useState<'all' | 'free' | 'paid'>('all');
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
+  const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
   const published = records.filter((item) => item.status === 'published');
   const items = plan === 'all' ? published : published.filter((item) => item.plan === plan);
-  const browser = useCatalogBrowser(items, gptSearchText);
+  const pageSize = viewMode === 'card' ? 12 : listPageSize;
+  const browser = useCatalogBrowser(items, gptSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
 
   function changePlan(nextPlan: 'all' | 'free' | 'paid') {
     setPlan(nextPlan);
@@ -25,8 +28,8 @@ export function GptCatalog() {
 
   return <section className="catalog-section catalog-directory">
     <header><div><span>GPT DIRECTORY</span><h2>무료·판매 GPT</h2><p>이름, 용도 또는 분류로 검색해 필요한 도구를 빠르게 찾으세요.</p></div><b>{published.length}</b></header>
-    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="GPT 이름·용도·분류 검색" filters={<div className="catalog-filter-tabs" role="group" aria-label="GPT 공개 유형"><button type="button" className={plan === 'all' ? 'active' : ''} onClick={() => changePlan('all')}>전체</button><button type="button" className={plan === 'free' ? 'active' : ''} onClick={() => changePlan('free')}>무료</button><button type="button" className={plan === 'paid' ? 'active' : ''} onClick={() => changePlan('paid')}>판매</button></div>} />
-    <div className="resource-grid catalog-result-grid">{browser.visibleItems.map((item) => <article className={`resource-card ${item.imageUrl ? 'has-image' : ''}`} key={item.id}>
+    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="GPT 이름·용도·분류 검색" filters={<div className="catalog-filter-tabs" role="group" aria-label="GPT 공개 유형"><button type="button" className={plan === 'all' ? 'active' : ''} onClick={() => changePlan('all')}>전체</button><button type="button" className={plan === 'free' ? 'active' : ''} onClick={() => changePlan('free')}>무료</button><button type="button" className={plan === 'paid' ? 'active' : ''} onClick={() => changePlan('paid')}>판매</button></div>} viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />} />
+    <div className={`resource-grid catalog-result-grid catalog-${viewMode}-view`}>{browser.visibleItems.map((item) => <article className={`resource-card ${item.imageUrl ? 'has-image' : ''}`} key={item.id}>
       {item.imageUrl && <div className="resource-card-image"><Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} fill sizes="(max-width: 760px) 100vw, 25vw" unoptimized={item.imageUrl.startsWith('data:')} /></div>}
       <div className="resource-card-top"><span>{item.platform}</span><b>{item.plan === 'paid' ? item.priceLabel || '가격 문의' : '무료'}</b></div>
       <small>{item.category}</small><h3>{item.title}</h3><p>{item.description}</p>
@@ -39,12 +42,15 @@ export function GptCatalog() {
 
 export function AppCatalog() {
   const { records, loading } = useRecords<AppItem>('apps', seedApps, true);
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
+  const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
   const items = records.filter((item) => item.status === 'published');
-  const browser = useCatalogBrowser(items, appSearchText);
+  const pageSize = viewMode === 'card' ? 12 : listPageSize;
+  const browser = useCatalogBrowser(items, appSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
 
   return <section className="catalog-section catalog-directory">
-    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="앱 이름·용도·분류 검색" />
-    <div className="resource-grid app-resource-grid catalog-result-grid">{browser.visibleItems.map((item, index) => <article className={`resource-card app-card tone-${(index % 4) + 1} ${item.imageUrl ? 'has-image' : ''}`} key={item.id}>
+    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="앱 이름·용도·분류 검색" viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />} />
+    <div className={`resource-grid app-resource-grid catalog-result-grid catalog-${viewMode}-view`}>{browser.visibleItems.map((item, index) => <article className={`resource-card app-card tone-${(index % 4) + 1} ${item.imageUrl ? 'has-image' : ''}`} key={item.id}>
       {item.imageUrl && <div className="resource-card-image"><Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} fill sizes="(max-width: 760px) 100vw, 25vw" unoptimized={item.imageUrl.startsWith('data:')} /></div>}
       <div className="resource-card-top"><span>WEB APP</span><b>{String((browser.page - 1) * browser.pageSize + index + 1).padStart(2, '0')}</b></div>
       <small>{item.category}</small><h3>{item.title}</h3><p>{item.description}</p>

@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { CatalogPagination, CatalogToolbar, useCatalogBrowser } from '@/components/CatalogBrowser';
+import { useState } from 'react';
+import { CatalogPagination, CatalogToolbar, CatalogViewControls, CatalogViewMode, useCatalogBrowser } from '@/components/CatalogBrowser';
 
 type ArchiveItem = {
   month: string;
@@ -28,11 +29,14 @@ const archiveItems: ArchiveItem[] = [
 const archiveSearchText = (item: ArchiveItem) => [item.title, item.description, item.category, item.month].join(' ');
 
 export default function ArchiveCatalog() {
-  const browser = useCatalogBrowser(archiveItems, archiveSearchText);
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
+  const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
+  const pageSize = viewMode === 'card' ? 12 : listPageSize;
+  const browser = useCatalogBrowser(archiveItems, archiveSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
 
   return <section className="content-catalog">
-    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={archiveItems.length} placeholder="자료명·분류·월 검색" />
-    <div className="archive-grid catalog-archive-grid">
+    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={archiveItems.length} placeholder="자료명·분류·월 검색" viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />} />
+    <div className={`archive-grid catalog-archive-grid catalog-${viewMode}-view`}>
       {browser.visibleItems.map((item) => <article className="archive-card" key={item.src}>
         <div className={`archive-image ${item.ratio}`}><Image src={item.src} alt={item.title} fill sizes="(max-width: 760px) 50vw, (max-width: 1080px) 50vw, 33vw" /></div>
         <div className="archive-card-copy"><div><span>{item.month}</span><b>{item.category}</b></div><h2>{item.title}</h2><p>{item.description}</p></div>

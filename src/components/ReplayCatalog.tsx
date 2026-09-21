@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 import { confirmReplaySupport, submitReplaySupport } from '@/app/replays/actions';
-import { CatalogPagination, CatalogToolbar, useCatalogBrowser } from '@/components/CatalogBrowser';
+import { CatalogPagination, CatalogToolbar, CatalogViewControls, CatalogViewMode, useCatalogBrowser } from '@/components/CatalogBrowser';
 import { seedReplays } from '@/lib/seed-data';
 import { ReplayItem } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -28,7 +28,10 @@ type ReplayViewer = { replayTitle: string; videoUrl: string };
 export default function ReplayCatalog() {
   const { records, loading } = useRecords<PublicReplayItem>('replays', publicReplaySeed, true, publicReplayFields);
   const items = records.filter((item) => item.status === 'published');
-  const browser = useCatalogBrowser(items, replaySearchText);
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
+  const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
+  const pageSize = viewMode === 'card' ? 12 : listPageSize;
+  const browser = useCatalogBrowser(items, replaySearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
   const [selected, setSelected] = useState<PublicReplayItem | null>(null);
   const [receipt, setReceipt] = useState<SupportReceipt | null>(null);
   const [viewer, setViewer] = useState<ReplayViewer | null>(null);
@@ -89,8 +92,8 @@ export default function ReplayCatalog() {
   }
 
   return <>
-    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="세미나 제목·내용 검색" />
-    <div className="replay-grid catalog-result-grid">{browser.visibleItems.map((item) => <article className="replay-card" key={item.id}>
+    <CatalogToolbar query={browser.query} onQueryChange={browser.setQuery} resultCount={browser.filteredItems.length} totalCount={items.length} placeholder="세미나 제목·내용 검색" viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />} />
+    <div className={`replay-grid catalog-result-grid catalog-${viewMode}-view`}>{browser.visibleItems.map((item) => <article className="replay-card" key={item.id}>
       <div className="replay-thumb"><Image src={item.thumbnailUrl || `/api/replay-thumbnails/${encodeURIComponent(item.id)}`} alt={`${item.title} 다시보기 썸네일`} fill sizes="(max-width: 760px) 100vw, 25vw" unoptimized={!item.thumbnailUrl} /></div>
       <span>{item.publishedAt}</span><h2>{item.title}</h2><p>{item.description}</p>
       <div className="replay-support-notice"><strong>10,000원부터 자유 후원</strong><small>신청 완료 후 계좌 안내</small></div>

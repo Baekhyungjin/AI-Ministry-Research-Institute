@@ -2,6 +2,8 @@
 
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 
+export type CatalogViewMode = 'card' | 'list';
+
 export function useCatalogBrowser<T>(
   items: T[],
   getSearchText: (item: T) => string,
@@ -39,13 +41,14 @@ export function useCatalogBrowser<T>(
   return { query, setQuery, page: safePage, setPage, pageCount, pageSize, filteredItems, visibleItems };
 }
 
-export function CatalogToolbar({ query, onQueryChange, resultCount, totalCount, placeholder, filters }: {
+export function CatalogToolbar({ query, onQueryChange, resultCount, totalCount, placeholder, filters, viewControls }: {
   query: string;
   onQueryChange: (value: string) => void;
   resultCount: number;
   totalCount: number;
   placeholder: string;
   filters?: ReactNode;
+  viewControls?: ReactNode;
 }) {
   return <div className="catalog-tools">
     <div className="catalog-tools-main">
@@ -56,7 +59,26 @@ export function CatalogToolbar({ query, onQueryChange, resultCount, totalCount, 
       </label>
       {filters}
     </div>
-    <p><strong>{resultCount}</strong>개 표시 <span>/ 전체 {totalCount}개</span></p>
+    <div className="catalog-tools-side">
+      {viewControls}
+      <p><strong>{resultCount}</strong>개 표시 <span>/ 전체 {totalCount}개</span></p>
+    </div>
+  </div>;
+}
+
+export function CatalogViewControls({ mode, onModeChange, listPageSize, onListPageSizeChange }: {
+  mode: CatalogViewMode;
+  onModeChange: (mode: CatalogViewMode) => void;
+  listPageSize: 20 | 30 | 50;
+  onListPageSizeChange: (size: 20 | 30 | 50) => void;
+}) {
+  return <div className="catalog-view-controls" aria-label="목록 보기 설정">
+    <span>보기</span>
+    <div className="catalog-view-switch" role="group" aria-label="보기 방식">
+      <button type="button" className={mode === 'card' ? 'active' : ''} onClick={() => onModeChange('card')} aria-pressed={mode === 'card'}><i aria-hidden="true">▦</i> 카드형</button>
+      <button type="button" className={mode === 'list' ? 'active' : ''} onClick={() => onModeChange('list')} aria-pressed={mode === 'list'}><i aria-hidden="true">☷</i> 목록형</button>
+    </div>
+    {mode === 'list' && <label className="catalog-page-size"><span>한 페이지</span><select value={listPageSize} onChange={(event) => onListPageSizeChange(Number(event.target.value) as 20 | 30 | 50)} aria-label="목록형 한 페이지 표시 개수"><option value={20}>20개</option><option value={30}>30개</option><option value={50}>50개</option></select></label>}
   </div>;
 }
 

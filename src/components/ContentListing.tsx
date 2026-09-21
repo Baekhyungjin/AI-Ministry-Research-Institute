@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { CatalogPagination, CatalogToolbar, useCatalogBrowser } from '@/components/CatalogBrowser';
+import { CatalogPagination, CatalogToolbar, CatalogViewControls, CatalogViewMode, useCatalogBrowser } from '@/components/CatalogBrowser';
 import { seedContents } from '@/lib/seed-data';
 import { ContentItem, ContentKind } from '@/lib/types';
 import { useRecords } from '@/lib/use-records';
@@ -15,9 +15,12 @@ export default function ContentListing({ kind }: { kind: ContentKind }) {
   const items = records.filter((item) => item.kind === kind && item.status === 'published').sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   const base = kind === 'column' ? '/columns' : '/notices';
   const [category, setCategory] = useState('all');
+  const [viewMode, setViewMode] = useState<CatalogViewMode>('card');
+  const [listPageSize, setListPageSize] = useState<20 | 30 | 50>(20);
   const categories = Array.from(new Set(items.map((item) => item.category).filter(Boolean)));
   const categoryItems = category === 'all' ? items : items.filter((item) => item.category === category);
-  const browser = useCatalogBrowser(categoryItems, contentSearchText, { desktopPageSize: 4, mobilePageSize: 4 });
+  const pageSize = viewMode === 'card' ? 12 : listPageSize;
+  const browser = useCatalogBrowser(categoryItems, contentSearchText, { desktopPageSize: pageSize, mobilePageSize: pageSize });
 
   function changeCategory(nextCategory: string) {
     setCategory(nextCategory);
@@ -37,15 +40,13 @@ export default function ContentListing({ kind }: { kind: ContentKind }) {
           <button type="button" className={category === 'all' ? 'active' : ''} onClick={() => changeCategory('all')}>전체</button>
           {categories.map((name) => <button type="button" className={category === name ? 'active' : ''} onClick={() => changeCategory(name)} key={name}>{name}</button>)}
         </div> : undefined}
+        viewControls={<CatalogViewControls mode={viewMode} onModeChange={(mode) => { setViewMode(mode); browser.setPage(1); }} listPageSize={listPageSize} onListPageSizeChange={(size) => { setListPageSize(size); browser.setPage(1); }} />}
       />
-      <div className="content-card-grid">
+      <div className={`content-card-grid catalog-${viewMode}-view`}>
         {browser.visibleItems.map((item, index) => (
           <Link href={`${base}/${item.id}`} className={`article-card content-list-card tone-${(index % 3) + 1}`} key={item.id}>
             {item.imageUrl ? <div className="article-card-image"><Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} fill sizes="(max-width: 760px) 50vw, 50vw" unoptimized={item.imageUrl.startsWith('data:')} /></div> : <div className="article-card-placeholder" aria-hidden="true"><span>{kind === 'column' ? 'COLUMN' : 'NOTICE'}</span></div>}
-            <div className="content-meta"><span>{item.category}</span><time>{item.publishedAt}</time></div>
-            <h2>{item.title}</h2>
-            <p>{item.excerpt}</p>
-            <span className="text-link">{kind === 'column' ? '자세히 읽기' : '공지 확인'} →</span>
+            <div className="content-card-copy"><div className="content-meta"><span>{item.category}</span><time>{item.publishedAt}</time></div><h2>{item.title}</h2><p>{item.excerpt}</p><span className="text-link">{kind === 'column' ? '자세히 읽기' : '공지 확인'} →</span></div>
           </Link>
         ))}
       </div>
