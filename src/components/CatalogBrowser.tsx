@@ -2,18 +2,24 @@
 
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 
-export function useCatalogBrowser<T>(items: T[], getSearchText: (item: T) => string) {
+export function useCatalogBrowser<T>(
+  items: T[],
+  getSearchText: (item: T) => string,
+  options: { desktopPageSize?: number; mobilePageSize?: number } = {},
+) {
   const [query, setQueryState] = useState('');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(6);
+  const desktopPageSize = options.desktopPageSize ?? 6;
+  const mobilePageSize = options.mobilePageSize ?? 4;
+  const [pageSize, setPageSize] = useState(desktopPageSize);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 760px)');
-    const syncPageSize = () => setPageSize(media.matches ? 4 : 6);
+    const syncPageSize = () => setPageSize(media.matches ? mobilePageSize : desktopPageSize);
     syncPageSize();
     media.addEventListener('change', syncPageSize);
     return () => media.removeEventListener('change', syncPageSize);
-  }, []);
+  }, [desktopPageSize, mobilePageSize]);
 
   const filteredItems = useMemo(() => {
     const keyword = query.trim().toLocaleLowerCase('ko-KR');
