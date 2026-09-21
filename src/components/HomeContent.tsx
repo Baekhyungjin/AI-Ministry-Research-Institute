@@ -8,8 +8,8 @@ import { useRecords } from '@/lib/use-records';
 
 const researchAreas = [
   { number: '01', title: '설교와 성경 연구', description: '본문 연구와 자료 정리를 돕되 해석의 책임은 목회자에게 남기는 활용법을 연구합니다.', href: '/columns' },
-  { number: '02', title: '교회 행정과 콘텐츠', description: '반복 업무를 줄이고 작은 교회도 지속할 수 있는 제작 체계를 만듭니다.', href: '/prompts' },
-  { number: '03', title: 'AI 윤리와 목회', description: '개인정보, 저작권, 신학적 분별을 현장에서 적용할 수 있는 기준으로 정리합니다.', href: '/insights' },
+  { number: '02', title: '교회 행정과 콘텐츠', description: '반복 업무를 줄이고 작은 교회도 지속할 수 있는 제작 체계를 만듭니다.', href: '/columns' },
+  { number: '03', title: 'AI 윤리와 목회', description: '개인정보, 저작권, 신학적 분별을 현장에서 적용할 수 있는 기준으로 정리합니다.', href: '/columns' },
 ];
 
 const quickLinks = [
@@ -65,9 +65,9 @@ export default function HomeContent() {
       <section className="portal-section research-newsroom"><div className="container">
         <div className="portal-section-head" data-reveal><div><span className="eyebrow">RESEARCH & COLUMN</span><h2>현장에서 시작한 연구</h2></div><Link href="/columns" className="text-link">모든 칼럼 보기 →</Link></div>
         <div className="newsroom-grid" data-reveal>
-          {featured && <Link href={`/columns/${featured.id}`} className="featured-research"><div className="featured-research-image"><Image src={featured.imageUrl || '/images/archive/2026-09/partner/bible-language-analysis.png'} alt={`${featured.title} 대표 이미지`} fill sizes="(max-width: 840px) 100vw, 52vw" /></div><div className="featured-research-copy"><span>{featured.category} · FEATURED</span><h3>{featured.title}</h3><p>{featured.excerpt}</p><time>{featured.publishedAt}</time></div></Link>}
+          {featured && <Link href={`/columns/${featured.id}`} className="featured-research" aria-label={`${featured.title} 칼럼 읽기`}><div className="featured-research-image"><Image src={featured.imageUrl || '/images/archive/2026-09/partner/bible-language-analysis.png'} alt={`${featured.title} 대표 이미지`} fill sizes="(max-width: 840px) 100vw, 52vw" /></div><div className="featured-research-copy"><span>{featured.category} · FEATURED</span><h3>{featured.title}</h3><p>{featured.excerpt}</p><div className="featured-research-meta"><time>{featured.publishedAt}</time><strong>칼럼 자세히 읽기 →</strong></div></div></Link>}
           {!featured && <div className="content-empty-card"><span>RESEARCH & COLUMN</span><strong>새로운 연구를 준비하고 있습니다.</strong><p>현장에서 검증한 연구와 칼럼을 이곳에 차례로 소개합니다.</p></div>}
-          <div className="research-index"><div className="research-index-heading"><strong>연구 분야</strong><span>Research Areas</span></div>{researchAreas.map((area) => <Link href={area.href} key={area.number}><span>{area.number}</span><div><h3>{area.title}</h3><p>{area.description}</p></div><b aria-hidden="true">↗</b></Link>)}</div>
+          <div className="research-index"><div className="research-index-heading"><strong>연구 분야</strong><span>Research Areas</span></div>{researchAreas.map((area) => <Link href={area.href} key={area.number} aria-label={`${area.title} 관련 칼럼 보기`}><span>{area.number}</span><div><h3>{area.title}</h3><p>{area.description}</p><small>관련 칼럼 보기 →</small></div><b aria-hidden="true">↗</b></Link>)}</div>
         </div>
       </div></section>
 
