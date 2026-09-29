@@ -45,7 +45,7 @@ export default function ContentAdmin() {
     const now = new Date();
     const image = form.get('image');
     let imageUrl = editing?.imageUrl ?? null;
-    let contentBlocks = kind === 'column' ? blocks : [];
+    let contentBlocks = kind !== 'notice' ? blocks : [];
     const uploadedUrls: string[] = [];
 
     try {
@@ -55,7 +55,7 @@ export default function ContentAdmin() {
         uploadedUrls.push(imageUrl);
       }
 
-      if (kind === 'column') {
+      if (kind !== 'notice') {
         const resolvedBlocks: ContentBlock[] = [];
         for (const block of blocks) {
           if (block.type !== 'image') {
@@ -66,13 +66,13 @@ export default function ContentAdmin() {
           const removeBlockImage = form.get(`remove-block-image-${block.id}`) === 'on';
           let blockImageUrl = removeBlockImage ? null : block.imageUrl;
           if (blockImage instanceof File && blockImage.size > 0) {
-            blockImageUrl = await uploadManagedImage(blockImage, 'column');
+            blockImageUrl = await uploadManagedImage(blockImage, kind);
             uploadedUrls.push(blockImageUrl);
           }
           resolvedBlocks.push({ ...block, imageUrl: blockImageUrl });
         }
         contentBlocks = resolvedBlocks;
-        if (!hasMeaningfulContent(contentBlocks)) throw new Error('칼럼 본문 블록에 내용을 입력해 주세요.');
+        if (!hasMeaningfulContent(contentBlocks)) throw new Error('본문 블록에 내용을 입력해 주세요.');
       }
     } catch (error) {
       await Promise.allSettled(uploadedUrls.map((url) => deleteManagedImage(url)));
@@ -85,7 +85,7 @@ export default function ContentAdmin() {
       kind,
       title: String(form.get('title')).trim(),
       excerpt: String(form.get('excerpt')).trim(),
-      body: kind === 'column' ? blocksToPlainText(contentBlocks) : String(form.get('body')).trim(),
+      body: kind !== 'notice' ? blocksToPlainText(contentBlocks) : String(form.get('body')).trim(),
       contentBlocks,
       category: String(form.get('category')).trim(),
       status: String(form.get('status')) as PublishStatus,
@@ -153,7 +153,7 @@ export default function ContentAdmin() {
   return (
     <div>
       <header className="admin-page-header">
-        <div><span>EDITORIAL</span><h1>칼럼·공지 관리</h1><p>초안으로 작성한 뒤 준비가 되었을 때 공개할 수 있습니다.</p></div>
+        <div><span>EDITORIAL</span><h1>칼럼·공지·프롬프트 관리</h1><p>초안으로 작성한 뒤 준비가 되었을 때 공개할 수 있습니다.</p></div>
       </header>
       <div className="admin-two-column content-admin-layout">
         <form className="admin-form admin-panel" onSubmit={submit} key={editing?.id ?? 'new-content'}>
@@ -164,13 +164,15 @@ export default function ContentAdmin() {
           <div className="segmented">
             <button type="button" className={kind === 'column' ? 'active' : ''} onClick={() => setKind('column')}>칼럼</button>
             <button type="button" className={kind === 'notice' ? 'active' : ''} onClick={() => setKind('notice')}>공지</button>
+            <button type="button" className={kind === 'prompt' || kind === 'image_prompt' ? 'active' : ''} onClick={() => setKind('prompt')}>프롬프트 자료</button>
           </div>
           <label>제목<input name="title" defaultValue={editing?.title ?? ''} required /></label>
-          <label>분류<input name="category" list={kind === 'column' ? 'column-category-options' : 'notice-category-options'} defaultValue={editing?.category ?? ''} placeholder={kind === 'column' ? '연구 분야를 선택하거나 직접 입력' : '예: 운영 안내, 교육 안내'} required /></label>
+          <label>분류<input name="category" list={kind === 'column' ? 'column-category-options' : kind === 'notice' ? 'notice-category-options' : 'prompt-category-options'} defaultValue={editing?.category ?? ''} placeholder={kind === 'column' ? '연구 분야를 선택하거나 직접 입력' : kind === 'notice' ? '예: 운영 안내, 교육 안내' : '예: 설교 준비, 교육, 행정'} required /></label>
           <datalist id="column-category-options">{columnCategories.map((entry) => <option value={entry.label} key={entry.label} />)}</datalist>
           <datalist id="notice-category-options"><option value="운영 안내" /><option value="교육 안내" /><option value="출간 소식" /><option value="행사 안내" /></datalist>
+          <datalist id="prompt-category-options"><option value="설교 준비" /><option value="교육" /><option value="교회 행정" /><option value="콘텐츠 제작" /></datalist>
           <label>요약<textarea name="excerpt" rows={3} defaultValue={editing?.excerpt ?? ''} required /></label>
-          {kind === 'column' ? <ContentBlockEditor blocks={blocks} onChange={setBlocks} /> : <label>본문<textarea name="body" rows={10} defaultValue={editing?.body ?? ''} required /></label>}
+          {kind !== 'notice' ? <ContentBlockEditor blocks={blocks} onChange={setBlocks} /> : <label>본문<textarea name="body" rows={10} defaultValue={editing?.body ?? ''} required /></label>}
           {kind === 'notice' && <fieldset className="notice-options"><legend>공지 노출 설정</legend><div className="form-grid"><label>노출 위치<select name="noticePlacement" defaultValue={editing?.noticePlacement ?? 'popup'}><option value="popup">홈페이지 중앙 팝업</option><option value="strip">최상단 알림줄</option><option value="banner">홈페이지 상단 배너</option></select></label><label>우선순위<input type="number" name="priority" defaultValue={editing?.priority ?? 0} /></label><label>노출 시작<input type="datetime-local" name="startsAt" defaultValue={editing?.startsAt?.slice(0,16) ?? ''} /></label><label>노출 종료<input type="datetime-local" name="endsAt" defaultValue={editing?.endsAt?.slice(0,16) ?? ''} /></label><label>버튼 문구<input name="ctaLabel" defaultValue={editing?.ctaLabel ?? ''} placeholder="예: 신청하기" /></label><label>버튼 링크<input name="ctaUrl" defaultValue={editing?.ctaUrl ?? ''} placeholder="/schedule 또는 https://..." /></label></div><p className="notice-options-help">중앙 팝업과 상단 배너는 홈페이지 첫 화면에서만 노출됩니다. 공개 상태와 노출 기간을 함께 확인하세요.</p></fieldset>}
           <label className="content-image-field">대표 이미지
             <input type="file" name="image" accept="image/jpeg,image/png,image/webp,image/gif" />
@@ -183,15 +185,15 @@ export default function ContentAdmin() {
           </div>
           <label className="consent-row"><input type="checkbox" name="featured" defaultChecked={editing?.featured ?? false} /><span>홈페이지 주요 콘텐츠로 표시</span></label>
           {message && <div className="form-success" role="status">{message}</div>}
-          <button className="btn btn-primary" disabled={saving}>{saving ? '저장 중…' : editing ? '변경 내용 저장' : `${kind === 'column' ? '칼럼' : '공지'} 저장하기`}</button>
+          <button className="btn btn-primary" disabled={saving}>{saving ? '저장 중…' : editing ? '변경 내용 저장' : `${kind === 'column' ? '칼럼' : kind === 'notice' ? '공지' : '프롬프트 자료'} 저장하기`}</button>
         </form>
 
         <section className="admin-panel content-manage">
           <div className="panel-heading"><div><span>ALL CONTENT</span><h2>등록된 콘텐츠</h2></div><b>{records.length}</b></div>
-          {!sortedRecords.length && <div className="admin-empty-state"><strong>아직 등록된 콘텐츠가 없습니다.</strong><span>왼쪽 작성란에서 첫 칼럼이나 공지를 작성해 주세요.</span></div>}
+          {!sortedRecords.length && <div className="admin-empty-state"><strong>아직 등록된 콘텐츠가 없습니다.</strong><span>왼쪽 작성란에서 첫 칼럼·공지·프롬프트 자료를 작성해 주세요.</span></div>}
           {sortedRecords.map((item) => (
             <article key={item.id}>
-              <div><span className="content-type">{item.kind === 'column' ? '칼럼' : '공지'}</span><span className={`publish-state ${item.status}`}>{item.status === 'published' ? '공개' : '초안'}</span></div>
+              <div><span className="content-type">{item.kind === 'column' ? '칼럼' : item.kind === 'notice' ? '공지' : item.kind === 'image_prompt' ? '이미지 프롬프트' : '프롬프트 자료'}</span><span className={`publish-state ${item.status}`}>{item.status === 'published' ? '공개' : '초안'}</span></div>
               <h3>{item.title}</h3><p>{item.category} · {item.publishedAt}</p>
               {(item.imageUrl || contentBlockImageUrls(item.contentBlocks).length > 0) && <span className="image-attached">이미지 포함</span>}
               <div className="inline-actions">

@@ -1,4 +1,4 @@
-export type ContentKind = 'column' | 'notice';
+export type ContentKind = 'column' | 'notice' | 'prompt' | 'image_prompt';
 export type PublishStatus = 'draft' | 'published';
 export type ScheduleStatus = 'open' | 'closed';
 export type SchedulePaymentType = 'free' | 'fixed' | 'voluntary';

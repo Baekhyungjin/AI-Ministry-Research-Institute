@@ -6,7 +6,7 @@ const IMAGE_BUCKET = 'content-images';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 const MAX_IMAGE_EDGE = 2400;
-export type ImageFolder = 'column' | 'notice' | 'gpt' | 'app' | 'replay' | 'schedule';
+export type ImageFolder = 'column' | 'notice' | 'prompt' | 'image_prompt' | 'gpt' | 'app' | 'replay' | 'schedule';
 
 function isLocalDemo() {
   return typeof window !== 'undefined' && process.env.NODE_ENV === 'development' && sessionStorage.getItem('miracle-admin-demo') === 'true';
@@ -40,7 +40,7 @@ async function optimizeImage(file: File) {
   return new File([blob], `${baseName}.webp`, { type: 'image/webp', lastModified: file.lastModified });
 }
 
-export async function uploadContentImage(file: File, kind: 'column' | 'notice') {
+export async function uploadContentImage(file: File, kind: 'column' | 'notice' | 'prompt' | 'image_prompt') {
   return uploadManagedImage(file, kind);
 }
 

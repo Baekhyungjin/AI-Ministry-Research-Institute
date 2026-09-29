@@ -7,7 +7,7 @@ import ContentShareActions from '@/components/ContentShareActions';
 import CommentsSection from '@/components/CommentsSection';
 
 export default function ContentDetail({ item }: { item: ContentItem }) {
-  const back = item.kind === 'column' ? '/columns' : '/notices';
+  const back = item.kind === 'column' ? '/columns' : item.kind === 'notice' ? '/notices' : '/prompts';
 
   return (
     <article className="article-page">
@@ -18,7 +18,7 @@ export default function ContentDetail({ item }: { item: ContentItem }) {
         {item.imageUrl && <figure className="article-cover"><Image src={item.imageUrl} alt={`${item.title} 대표 이미지`} width={1200} height={720} sizes="(max-width: 900px) 100vw, 900px" unoptimized={item.imageUrl.startsWith('data:')} /></figure>}
         <div className="article-body"><ContentBlocks blocks={item.contentBlocks?.length ? item.contentBlocks : legacyBodyToBlocks(item.body)} /></div>
         <div className="article-end"><strong>현장에 적용할 방법을 함께 찾고 싶으신가요?</strong><Link href="/apply" className="btn btn-primary">연구소에 문의하기</Link></div>
-        <CommentsSection contentType={item.kind} contentId={item.id} />
+        {(item.kind === 'column' || item.kind === 'notice') && <CommentsSection contentType={item.kind} contentId={item.id} />}
       </div>
     </article>
   );

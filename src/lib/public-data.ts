@@ -32,8 +32,9 @@ function mapContent(row: ContentRow): ContentItem {
 export const getPublishedContent = cache(async (id: string, kind: ContentKind) => {
   const supabase = createPublicClient();
   if (!supabase) return null;
-  const { data, error } = await supabase.from('contents').select('*')
-    .eq('id', id).eq('kind', kind).eq('status', 'published').maybeSingle();
+  let query = supabase.from('contents').select('*').eq('id', id).eq('status', 'published');
+  query = kind === 'prompt' ? query.in('kind', ['prompt', 'image_prompt']) : query.eq('kind', kind);
+  const { data, error } = await query.maybeSingle();
   if (error || !data) return null;
   return mapContent(data as ContentRow);
 });
@@ -42,7 +43,7 @@ export async function getPublishedContentRoutes() {
   const supabase = createPublicClient();
   if (!supabase) return [];
   const { data, error } = await supabase.from('contents')
-    .select('id,kind,published_at').eq('status', 'published');
+    .select('id,kind,published_at').eq('status', 'published').in('kind', ['column', 'notice', 'prompt', 'image_prompt']);
   if (error) return [];
   return (data ?? []) as Array<{ id: string; kind: ContentKind; published_at: string }>;
 }

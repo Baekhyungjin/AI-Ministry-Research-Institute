@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   })), ...routes.map((item) => ({
-    url: new URL(`/${item.kind === 'column' ? 'columns' : 'notices'}/${item.id}`, SITE_URL).toString(),
+    url: new URL(`/${item.kind === 'column' ? 'columns' : item.kind === 'notice' ? 'notices' : 'prompts'}/${item.id}`, SITE_URL).toString(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
     lastModified: item.published_at ? new Date(item.published_at) : undefined,

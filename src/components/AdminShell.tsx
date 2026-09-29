@@ -8,7 +8,7 @@ import { isSupabaseAdmin, isSupabaseConfigured, supabase } from '@/lib/supabase'
 const adminLinks = [
   { href: '/admin', label: '운영 현황', exact: true },
   { href: '/admin/applications', label: '문의·신청 관리' },
-  { href: '/admin/content', label: '칼럼·공지 관리' },
+  { href: '/admin/content', label: '칼럼·공지·프롬프트' },
   { href: '/admin/schedules', label: '일정 관리' },
   { href: '/admin/resources', label: 'GPT·앱·다시보기' },
   { href: '/admin/leads', label: '파트너·시청 신청' },
